@@ -1,0 +1,10 @@
+# .dockerignore
+.git
+.svn
+node_modules
+docs
+env
+static
+db
+/api/utils/credentials/*
+README.md
