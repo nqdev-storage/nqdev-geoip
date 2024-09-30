@@ -17,6 +17,11 @@ def okResult(isSuccess, message, payload):
     return jsonify({"error": "IP address not found"})
 
 
+@app.route('/', methods=['GET'])
+def home():
+    return "Welcome to Flask!"
+
+
 @app.route('/geoip-update', methods=['GET'])
 def get_geoip_update():
     token = request.args.get('token')
@@ -67,4 +72,4 @@ def get_geoip_city_info():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=False)
