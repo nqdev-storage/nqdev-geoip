@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for
 import pygeoip
 
 app = Flask(__name__)
@@ -20,6 +20,16 @@ def okResult(isSuccess, message, payload):
 @app.route('/', methods=['GET'])
 def home():
     return "Welcome to Flask!"
+
+
+@app.route('/login')
+def login():
+    return 'login'
+
+
+@app.route('/user/<username>')
+def profile(username):
+    return f'{username}\'s profile'
 
 
 @app.route('/geoip-update', methods=['GET'])
@@ -69,6 +79,12 @@ def get_geoip_city_info():
             return jsonify({"error": "IP address not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+with app.test_request_context():
+    print(url_for('login'))
+    print(url_for('login', next='/'))
+    print(url_for('profile', username='John Doe'))
 
 
 if __name__ == '__main__':
