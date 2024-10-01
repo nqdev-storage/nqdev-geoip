@@ -1,23 +1,23 @@
 version: '3'
 
 services:
-    vhs-sms-tts-app:
+    esms-geoip:
         build:
             context: .
             dockerfile: Dockerfile
-        image: qpcoders/vhs-sms-tts-app:latest
-        container_name: vhs-sms-tts-app
+        image: vhs/esms-geoip:latest
+        container_name: esms-geoip
         restart: always
         # network_mode: "host"
         ports:
-            - 8000:8000
+            - 8002:5000
         volumes:
-            - ./db:/app/db
-            - ./static:/app/static
-            - ./api/utils/credentials:/app/api/utils/credentials
+            - ./dbs:/app/dbs
+            # - ./static:/app/static
+            # - ./api/utils/credentials:/app/api/utils/credentials
         environment:
             TZ: "Asia/Ho_Chi_Minh" # Đặt timezone tại đây
-            DJANGO_SETTINGS_MODULE: vhs_sms_tts.settings
+            # DJANGO_SETTINGS_MODULE: vhs_sms_tts.settings
         dns:
             - 8.8.8.8
             - 8.8.4.4

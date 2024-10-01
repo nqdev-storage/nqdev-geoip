@@ -18,7 +18,8 @@ EXPOSE 8000
 
 # Thiết lập environment variable cho Django
 # ENV DJANGO_SETTINGS_MODULE=myproject.settings
-ENV DJANGO_SETTINGS_MODULE=vhs_sms_tts.settings
+# ENV DJANGO_SETTINGS_MODULE=vhs_sms_tts.settings
 
 # Khởi chạy ứng dụng Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "geoip_proxy.py"]
