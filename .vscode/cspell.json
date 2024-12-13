@@ -22,6 +22,7 @@
         "esms",
         "geoip",
         "geoipcity",
+        "gunicorn",
         "jsonify",
         "mmdb",
         "pygeoip",
