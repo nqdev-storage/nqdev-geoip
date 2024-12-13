@@ -19,13 +19,23 @@
     "language": "en,vi",
     // words - list of words to be always considered correct
     "words": [
+        "certifi",
         "esms",
+        "followees",
         "geoip",
         "geoipcity",
         "gunicorn",
+        "idna",
+        "igtvcount",
+        "instaloader",
         "jsonify",
+        "mccabe",
         "mmdb",
+        "pluggy",
+        "pycodestyle",
+        "pyflakes",
         "pygeoip",
+        "pytest",
         "virtualenv",
         "Werkzeug"
     ],

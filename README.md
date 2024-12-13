@@ -35,6 +35,12 @@ curl --location 'http://localhost:5000/geoip?ip=185.213.82.249'
 curl --location 'http://localhost:5000/geoipcity?ip=185.213.82.249'
 ```
 
+### Other
+
+```bash
+curl --location 'http://localhost:5000/instagram/getinfo?username=bngoc.winwin'
+```
+
 ---
 
 # GeoLite.mmdb
