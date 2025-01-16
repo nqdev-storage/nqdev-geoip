@@ -39,4 +39,6 @@ jobs:
                   # Kiểm tra xem có thay đổi nào trong thư mục ./dbs không
                   git add ./dbs
                   git diff --cached --exit-code || git commit -m "Update GeoIP databases"  # Nếu có thay đổi, commit
-                  git push origin main  # Đẩy lên nhánh main
+
+                  # Sử dụng GitHub token để đẩy lên nhánh main
+                  git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git main  # Đẩy lên nhánh main
