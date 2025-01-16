@@ -1,0 +1,31 @@
+name: Update GeoIP Databases
+
+on:
+    schedule:
+        # https://crontab.guru/#0_0_*_*_0
+        - cron: "0 0 * * 0" # Chạy vào mỗi Chủ Nhật lúc 00:00 UTC
+    workflow_dispatch: # Cho phép chạy thủ công
+    repository_dispatch:
+
+jobs:
+    update_geoip:
+        runs-on: ubuntu-latest # Sử dụng môi trường Ubuntu
+        timeout-minutes: 5
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.x" # Cài đặt Python 3.x
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install requests  # Cài đặt thư viện requests nếu chưa có
+
+            - name: Run geoip_update.py
+              run: |
+                  python geoip_update.py  # Chạy file geoip_update.py
