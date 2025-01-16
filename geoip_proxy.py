@@ -91,8 +91,10 @@ def get_geoip_city_info():
             return jsonify(city)
         else:
             return jsonify({"error": "IP address not found"}), 404
+    except ValueError as e:
+        return jsonify({"error": "Invalid value: " + str(e)}), 400
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Internal server error: " + str(e)}), 500
 
 
 @app.route(rule='/instagram/getinfo', methods=['GET'])
