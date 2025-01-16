@@ -10,7 +10,6 @@ on:
 jobs:
     update_geoip:
         runs-on: ubuntu-latest # Sử dụng môi trường Ubuntu
-        timeout-minutes: 5
 
         steps:
             - name: Checkout repository
@@ -29,3 +28,15 @@ jobs:
             - name: Run geoip_update.py
               run: |
                   python geoip_update.py  # Chạy file geoip_update.py
+
+            - name: Configure Git
+              run: |
+                  git config --global user.name "github-actions"
+                  git config --global user.email "github-actions@github.com"
+
+            - name: Commit and push dbs folder
+              run: |
+                  # Kiểm tra xem có thay đổi nào trong thư mục ./dbs không
+                  git add ./dbs
+                  git diff --cached --exit-code || git commit -m "Update GeoIP databases"  # Nếu có thay đổi, commit
+                  git push origin main  # Đẩy lên nhánh main
