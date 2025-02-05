@@ -1,6 +1,7 @@
 [![CodeQL](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/github-code-scanning/codeql)
 [![Python App Flask CI](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/python-app-testing.yml/badge.svg)](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/python-app-testing.yml)
 [![Update GeoIP Databases](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/geoip_update.yml/badge.svg)](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/geoip_update.yml)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/nqdev-storage/nqdev-geoip/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/nqdev-storage/nqdev-geoip/tree/main)
 
 # nqdev-geoip
 
