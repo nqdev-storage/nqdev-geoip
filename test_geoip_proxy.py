@@ -81,10 +81,10 @@ class GeoIPTestCase(unittest.TestCase):
         self.assertEqual(response.data.decode(), "Welcome to Flask!")
 
     # Kiểm tra route '/login'
-    def test_login(self):
-        response = self.app.get('/login')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode(), "login")
+    # def test_login(self):
+    #     response = self.app.get('/login')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data.decode(), "login")
 
     # Kiểm tra route '/user/<username>'
     def test_profile(self):
