@@ -48,7 +48,7 @@ jobs:
               run: |
                   docker build -t ghcr.io/${{ github.repository_owner }}/nqdev-geoip:${{ env.VERSION }} \
                               -t ghcr.io/${{ github.repository_owner }}/nqdev-geoip:latest \
-                              -f ./nqdev/nginx/1.27.2/alpine-custom/Dockerfile ./nqdev/nginx/1.27.2/alpine-custom
+                              -f ./Dockerfile .
 
             # 6. Đẩy Docker image lên GitHub Container Registry
             - name: Push Docker Image
