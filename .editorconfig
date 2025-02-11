@@ -3,6 +3,10 @@
 # top-most EditorConfig file
 root = true
 
+[*.{yml}]
+charset = utf-8
+indent_size = 2
+
 # Unix-style newlines with a newline ending every file
 [*]
 indent_style = space
