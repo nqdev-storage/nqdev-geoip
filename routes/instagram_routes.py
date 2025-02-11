@@ -8,6 +8,27 @@ instagram_bp = Blueprint('instagram', __name__, url_prefix='/instagram')
 @instagram_bp.route('/getinfo', methods=['GET'])
 # https://instaloader.github.io/installation.html
 def getinfo_instagram():
+    """
+    Lấy thông tin tài khoản Instagram
+    ---
+    parameters:
+      - name: username
+        in: query
+        type: string
+        required: true
+        description: Tên người dùng Instagram cần tra cứu
+    responses:
+      200:
+        description: Trả về thông tin tài khoản Instagram
+        schema:
+          type: object
+      400:
+        description: Thiếu username
+      404:
+        description: Không tìm thấy tài khoản
+      500:
+        description: Lỗi server
+    """
     username = request.args.get('username')
     if not username:
         return okResult(isSuccess=False, message="Missing Username", error="Missing Username")
