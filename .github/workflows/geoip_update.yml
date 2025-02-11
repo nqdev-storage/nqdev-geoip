@@ -31,9 +31,9 @@ jobs:
                   pip install requests  # Cài đặt thư viện requests nếu chưa có
                   pip install -r requirements.txt
 
-            - name: Run geoip_update.py
+            - name: Run waitress_geoip_update.py
               run: |
-                  python geoip_update.py  # Chạy file geoip_update.py
+                  python waitress_geoip_update.py  # Chạy file waitress_geoip_update.py
 
             - name: Configure Git
               run: |

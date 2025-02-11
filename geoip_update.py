@@ -43,12 +43,12 @@ def download_and_extract(url, output_path):
 
 
 # Tải và giải nén GeoIP.dat
-logging.info("Tải và giải nén './dbs/GeoIP.dat'")
-download_and_extract(url_geoip, './dbs/GeoIP.dat')
+# logging.info("Tải và giải nén './dbs/GeoIP.dat'")
+# download_and_extract(url_geoip, './dbs/GeoIP.dat')
 
 # Tải và giải nén GeoIPCity.dat
-logging.info("Tải và giải nén './dbs/GeoIPCity.dat'")
-download_and_extract(url_geoip_city, './dbs/GeoIPCity.dat')
+# logging.info("Tải và giải nén './dbs/GeoIPCity.dat'")
+# download_and_extract(url_geoip_city, './dbs/GeoIPCity.dat')
 
-logging.info("Đã tải và giải nén các file thành công.")
-print("Đã tải và giải nén các file thành công.")
+# logging.info("Đã tải và giải nén các file thành công.")
+# print("Đã tải và giải nén các file thành công.")
