@@ -79,7 +79,8 @@ def get_geoip_update():
     try:
         return jsonify({"error": "IP address not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error("Exception occurred", exc_info=True)
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route(rule='/geoip', methods=['GET'])
@@ -97,7 +98,8 @@ def get_geoip_info():
         else:
             return jsonify({"error": "IP address not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error("Exception occurred", exc_info=True)
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route(rule='/geoipcity', methods=['GET'])
@@ -117,7 +119,8 @@ def get_geoip_city_info():
     except ValueError as e:
         return jsonify({"error": "Invalid value: " + str(e)}), 400
     except Exception as e:
-        return jsonify({"error": "Internal server error: " + str(e)}), 500
+        logging.error("Exception occurred", exc_info=True)
+        return jsonify({"error": "Internal server error"}), 500
 
 
 if __name__ == '__main__':
