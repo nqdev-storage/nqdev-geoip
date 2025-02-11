@@ -7,15 +7,17 @@ from logging.handlers import TimedRotatingFileHandler
 
 # Cấu hình logger
 log_filename = f"logs/test_geoip_proxy_{datetime.datetime.now().strftime('%Y%m%d')}.log"
-
 logger = logging.getLogger("GeoIPTestLogger")
 logger.setLevel(logging.DEBUG)
+
 # Xóa handler cũ (tránh log trùng khi chạy nhiều lần)
 if logger.hasHandlers():
     logger.handlers.clear()
+
 # Thêm handler cho console
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
+
 # Thêm handler cho file
 file_handler = TimedRotatingFileHandler(
     filename=log_filename,
@@ -24,16 +26,20 @@ file_handler = TimedRotatingFileHandler(
     backupCount=7,  # Giữ log tối đa 7 ngày
     encoding="utf-8",
 )
+
 # Định dạng log
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
+
 # Gắn handler vào logger
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
 
 class GeoIPTestCase(unittest.TestCase):
+    """Test các route liên quan đến GeoIP"""
+
     @classmethod
     def setUpClass(cls):
         """Chạy 1 lần duy nhất trước tất cả test cases."""
@@ -49,7 +55,20 @@ class GeoIPTestCase(unittest.TestCase):
         """Chạy trước mỗi test case."""
         self.app = app.test_client()
         self.app.testing = True
+        self.test_name = self._testMethodName  # Lưu tên test case hiện tại
         logger.info(f"Bắt đầu test: {self._testMethodName}")
+
+    def log_failure(self, error):
+        """ Ghi log khi test thất bại """
+        logger.error(f"❌ Test FAILED: {self.test_name} - Error: {error}")
+
+    def addCleanup(self):
+        """ Kiểm tra nếu test thất bại thì ghi log """
+        result = self._outcome.result
+        if result.failures or result.errors:
+            for test_case, error in result.failures + result.errors:
+                if test_case is self:
+                    self.log_failure(error)
 
     def tearDown(self):
         """Chạy sau mỗi test case."""
@@ -71,7 +90,10 @@ class GeoIPTestCase(unittest.TestCase):
     def test_profile(self):
         response = self.app.get('/user/John')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode(), "John's profile")
+        # Parse JSON để kiểm tra nội dung
+        json_data = response.get_json()
+        self.assertEqual(json_data["code"], 9999)
+        self.assertEqual(json_data["payload"]["username"], "John")
 
     # Kiểm tra route '/geoip' khi thiếu IP
     def test_geoip_missing_ip(self):
