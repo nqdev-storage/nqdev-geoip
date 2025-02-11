@@ -117,7 +117,8 @@ def get_geoip_city_info():
         else:
             return jsonify({"error": "IP address not found"}), 404
     except ValueError as e:
-        return jsonify({"error": "Invalid value: " + str(e)}), 400
+        logging.error("ValueError occurred: %s", str(e))
+        return jsonify({"error": "Invalid value provided"}), 400
     except Exception as e:
         logging.error("Exception occurred", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
