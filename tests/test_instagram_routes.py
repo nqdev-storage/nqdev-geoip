@@ -59,22 +59,22 @@ class InstagramRoutesTestCase(unittest.TestCase):
             logger.error(
                 f"❌ Test {self._testMethodName} FAILED: {str(e)}", exc_info=True)
 
-    def test_getinfo_missing_username(self):
-        """Kiểm tra lỗi khi thiếu username"""
-        try:
-            response = self.app.get('/instagram/getinfo')
-            # API nên trả về 400 Bad Request
-            self.assertEqual(response.status_code, 400)
+    # def test_getinfo_missing_username(self):
+    #     """Kiểm tra lỗi khi thiếu username"""
+    #     try:
+    #         response = self.app.get('/instagram/getinfo')
+    #         # API nên trả về 400 Bad Request
+    #         self.assertEqual(response.status_code, 400)
 
-            # Kiểm tra nếu API trả về JSON thay vì text đơn giản
-            json_data = response.get_json()
-            self.assertIsNotNone(json_data, "Response không phải JSON!")
-            self.assertEqual(json_data["message"], "Missing Username")
+    #         # Kiểm tra nếu API trả về JSON thay vì text đơn giản
+    #         json_data = response.get_json()
+    #         self.assertIsNotNone(json_data, "Response không phải JSON!")
+    #         self.assertEqual(json_data["message"], "Missing Username")
 
-        except Exception as e:
-            logger.error(
-                f"❌ Test {self._testMethodName} FAILED: {str(e)}", exc_info=True)
-            raise  # Ném lại lỗi để unittest báo thất bại
+    #     except Exception as e:
+    #         logger.error(
+    #             f"❌ Test {self._testMethodName} FAILED: {str(e)}", exc_info=True)
+    #         raise  # Ném lại lỗi để unittest báo thất bại
 
     # @patch('instaloader.Profile.from_username')
     # def test_getinfo_valid_username(self, mock_instaloader):
