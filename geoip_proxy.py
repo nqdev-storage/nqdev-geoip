@@ -1,6 +1,28 @@
 from flask import Flask, request, jsonify, url_for
 import pygeoip
 import instaloader
+import datetime
+import logging
+from logging.handlers import TimedRotatingFileHandler
+
+# Cấu hình logger
+logging.basicConfig(
+    # Chọn mức độ log (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',  # Định dạng log
+    handlers=[
+        logging.StreamHandler(),  # Ghi log ra console
+        # Ghi log vào file, tách theo ngày
+        TimedRotatingFileHandler(
+            filename=f"logs/app_geoip_proxy_{datetime.datetime.now().strftime('%Y%m%d')}.log",
+            when="midnight",    # Tách log vào lúc nửa đêm
+            interval=1,         # Sau mỗi ngày
+            backupCount=7,      # Lưu tối đa 7 ngày log cũ
+            encoding='utf-8',    # Đặt mã hóa file log để hỗ trợ ký tự Unicode.
+            # suffix='%Y-%m-%d.log'   # Thêm phần đuôi `.log` và ngày vào tên file
+        )
+    ]
+)
 
 # https://flask.palletsprojects.com/en/stable/
 app = Flask(__name__)

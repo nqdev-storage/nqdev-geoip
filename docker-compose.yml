@@ -1,6 +1,5 @@
-version: '3'
-
 services:
+
     esms-geoip:
         build:
             context: .
@@ -22,3 +21,17 @@ services:
             - 8.8.8.8
             - 8.8.4.4
             - 1.1.1.1
+            - 1.0.0.1
+        deploy:
+            resources:
+                limits:
+                    # cpus: "0.80" # Giới hạn 80% CPU
+                    cpus: "1" # Giới hạn container sử dụng tối đa 10 lõi CPU
+                    memory: "1G" # Giới hạn 3.2GB RAM (80% của 4GB)
+                reservations:
+                    cpus: "0.25" # Đảm bảo container có ít nhất 25% CPU
+                    memory: "256M" # Đảm bảo container có ít nhất 256MB RAM
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "5g"

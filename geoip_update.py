@@ -2,6 +2,20 @@ import os
 import requests
 import gzip
 import shutil
+import logging
+
+# Cấu hình logger
+logging.basicConfig(
+    # Chọn mức độ log (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',  # Định dạng log
+    handlers=[
+        logging.StreamHandler(),  # Ghi log ra console
+        # Ghi log vào file
+        logging.FileHandler(
+            filename='logs/app_geoip_update.log', encoding='utf-8')
+    ]
+)
 
 # URLs của các file GeoIP
 url_geoip = "https://mailfud.org/geoip-legacy/GeoIP.dat.gz"
@@ -29,9 +43,12 @@ def download_and_extract(url, output_path):
 
 
 # Tải và giải nén GeoIP.dat
+logging.info("Tải và giải nén './dbs/GeoIP.dat'")
 download_and_extract(url_geoip, './dbs/GeoIP.dat')
 
 # Tải và giải nén GeoIPCity.dat
+logging.info("Tải và giải nén './dbs/GeoIPCity.dat'")
 download_and_extract(url_geoip_city, './dbs/GeoIPCity.dat')
 
+logging.info("Đã tải và giải nén các file thành công.")
 print("Đã tải và giải nén các file thành công.")

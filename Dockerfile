@@ -22,4 +22,5 @@ EXPOSE 8000
 
 # Khởi chạy ứng dụng Django
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-CMD ["python", "geoip_proxy.py"]
+# CMD ["python", "geoip_proxy.py"]
+CMD ["python", "waitress_geoip_proxy.py"]
