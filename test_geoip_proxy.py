@@ -1,13 +1,59 @@
 import unittest
 from geoip_proxy import app  # Giả sử tên ứng dụng của bạn là geoip_proxy.py
 from unittest.mock import patch
+import datetime
+import logging
+from logging.handlers import TimedRotatingFileHandler
+
+# Cấu hình logger
+log_filename = f"logs/test_geoip_proxy_{datetime.datetime.now().strftime('%Y%m%d')}.log"
+
+logger = logging.getLogger("GeoIPTestLogger")
+logger.setLevel(logging.DEBUG)
+# Xóa handler cũ (tránh log trùng khi chạy nhiều lần)
+if logger.hasHandlers():
+    logger.handlers.clear()
+# Thêm handler cho console
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+# Thêm handler cho file
+file_handler = TimedRotatingFileHandler(
+    filename=log_filename,
+    when="midnight",  # Tạo file log mới mỗi ngày
+    interval=1,
+    backupCount=7,  # Giữ log tối đa 7 ngày
+    encoding="utf-8",
+)
+# Định dạng log
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+# Gắn handler vào logger
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
 
 
 class GeoIPTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        """Chạy 1 lần duy nhất trước tất cả test cases."""
+        logger.info("Bắt đầu chạy test suite GeoIPTestCase.")
+
+    @classmethod
+    def tearDownClass(cls):
+        """Chạy 1 lần duy nhất sau tất cả test cases."""
+        logger.info("Hoàn thành test suite GeoIPTestCase.")
+
     # Tạo test client từ Flask
     def setUp(self):
+        """Chạy trước mỗi test case."""
         self.app = app.test_client()
         self.app.testing = True
+        logger.info(f"Bắt đầu test: {self._testMethodName}")
+
+    def tearDown(self):
+        """Chạy sau mỗi test case."""
+        logger.info(f"Hoàn thành test: {self._testMethodName}")
 
     # Kiểm tra route '/'
     def test_home(self):
@@ -83,5 +129,8 @@ class GeoIPTestCase(unittest.TestCase):
         self.assertIn("IP address not found", response.data.decode())
 
 
-if __name__ == '__main__':
-    unittest.main()
+if __name__ == "__main__":
+    try:
+        unittest.main()
+    except Exception as e:
+        logger.error(f"Lỗi khi chạy test: {e}")
