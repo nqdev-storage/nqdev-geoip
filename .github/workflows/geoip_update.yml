@@ -7,6 +7,9 @@ on:
     workflow_dispatch: # Cho phép chạy thủ công
     repository_dispatch:
 
+permissions:
+    contents: write # Cấp quyền ghi để commit và push
+
 jobs:
     update_geoip:
         runs-on: ubuntu-latest # Sử dụng môi trường Ubuntu
