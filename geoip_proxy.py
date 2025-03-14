@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flasgger import Swagger
+from werkzeug.middleware.proxy_fix import ProxyFix
 import pygeoip
 import datetime
 import logging
@@ -32,6 +33,9 @@ logging.basicConfig(
 # https://flask.palletsprojects.com/en/stable/
 app = Flask(__name__)
 Swagger(app=app)    # Khởi tạo Swagger
+
+# Xử lý reverse proxy (nếu có) - ví dụ khi ứng dụng chạy sau Nginx hoặc HAProxy
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 # Đăng ký route
 app.register_blueprint(instagram_bp)
