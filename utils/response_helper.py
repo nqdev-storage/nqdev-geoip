@@ -1,7 +1,7 @@
 from flask import jsonify
 
 
-def okResult(isSuccess: bool, message: str, payload: object = {}, error: str = ''):
+def okResult(isSuccess: bool, message: str, payload: object = {}, error: str = '', http_code: int = -1):
     """
     Hàm trả về response JSON theo cấu trúc chuẩn.
 
@@ -16,11 +16,11 @@ def okResult(isSuccess: bool, message: str, payload: object = {}, error: str = '
             "code": 9999,
             "message": message,
             "payload": payload,
-        }), 200
+        }), (200 if http_code < 0 else http_code)
 
     return jsonify({
         "code": -9999,
         "message": message,
         "payload": payload,
         "error": error,
-    }), 500
+    }), (500 if http_code < 0 else http_code)

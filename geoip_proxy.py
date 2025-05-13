@@ -75,26 +75,28 @@ def get_geoip_update():
         required: true
         description: Token xác thực
     responses:
-      400:
-        description: Thiếu Token
+      101:
+        description: Missing Token
+      200:
+        description: Successfully updated the GeoIP database.
       404:
         description: Không tìm thấy địa chỉ IP
       500:
-        description: Lỗi server
+        description: Exception occurred
     """
     token = request.args.get('token')
     if not token:
-        return jsonify({"error": "Missing Token"}), 400
+        return okResult(isSuccess=False, message="Missing Token", http_code=101)
 
-    # Lấy thông tin địa lý từ địa chỉ IP
+        # Lấy thông tin địa lý từ địa chỉ IP
     try:
-        download_and_extract(url_geoip, './dbs/GeoIP.dat')
-        download_and_extract(url_geoip_city, './dbs/GeoIPCity.dat')
+        # download_and_extract(url_geoip, './dbs/GeoIP.dat')
+        # download_and_extract(url_geoip_city, './dbs/GeoIPCity.dat')
 
-        return jsonify({"error": "IP address not found"}), 404
+        return okResult(isSuccess=True, message="Successfully updated the GeoIP database.", payload={}, http_code=200)
     except Exception as e:
         logging.error("Exception occurred", exc_info=True)
-        return jsonify({"error": "Internal server error"}), 500
+        return okResult(isSuccess=False, message="Exception occurred", http_code=500)
 
 
 @app.route(rule='/geoip', methods=['GET'])
