@@ -1,7 +1,7 @@
-import os
+# import os
 from flask import jsonify
 
-ENV = os.getenv("ENV", "development")  # mặc định là development nếu chưa set
+# ENV = os.getenv("ENV", "development")  # mặc định là development nếu chưa set
 
 
 def okResult(isSuccess: bool, message: str, payload: object = {}, error: str = '', http_code: int = -1):
@@ -26,5 +26,5 @@ def okResult(isSuccess: bool, message: str, payload: object = {}, error: str = '
         "message": message,
         "payload": payload,
         # ẩn lỗi nếu production
-        "error": None if ENV == "production" else error,
+        # "error": None if ENV == "production" else error,
     }), (500 if http_code < 0 else http_code)
