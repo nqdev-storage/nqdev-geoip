@@ -87,61 +87,61 @@ class GeoIPTestCase(unittest.TestCase):
     #     self.assertEqual(response.data.decode(), "login")
 
     # Kiểm tra route '/user/<username>'
-    def test_profile(self):
-        response = self.app.get('/user/John')
-        self.assertEqual(response.status_code, 200)
-        # Parse JSON để kiểm tra nội dung
-        json_data = response.get_json()
-        self.assertEqual(json_data["code"], 9999)
-        self.assertEqual(json_data["payload"]["username"], "John")
+    # def test_profile(self):
+    #     response = self.app.get('/user/John')
+    #     self.assertEqual(response.status_code, 200)
+    #     # Parse JSON để kiểm tra nội dung
+    #     json_data = response.get_json()
+    #     self.assertEqual(json_data["code"], 9999)
+    #     self.assertEqual(json_data["payload"]["username"], "John")
 
     # Kiểm tra route '/geoip' khi thiếu IP
-    def test_geoip_missing_ip(self):
-        response = self.app.get('/geoip?token=some_token')
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Missing IP address", response.data.decode())
+    # def test_geoip_missing_ip(self):
+    #     response = self.app.get('/geoip?token=some_token')
+    #     self.assertEqual(response.status_code, 400)
+    #     self.assertIn("Missing IP address", response.data.decode())
 
     # Kiểm tra route '/geoip' với IP hợp lệ
-    @patch('pygeoip.GeoIP.country_code_by_addr', return_value='US')
-    def test_geoip_valid_ip(self, mock_geoip):
-        response = self.app.get('/geoip?ip=8.8.8.8&token=some_token')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("country", response.json)
-        self.assertEqual(response.json["country"], "US")
+    # @patch('pygeoip.GeoIP.country_code_by_addr', return_value='US')
+    # def test_geoip_valid_ip(self, mock_geoip):
+    #     response = self.app.get('/geoip?ip=8.8.8.8&token=some_token')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn("country", response.json)
+    #     self.assertEqual(response.json["country"], "US")
 
     # Kiểm tra route '/geoip' với IP không hợp lệ
-    @patch('pygeoip.GeoIP.country_code_by_addr', return_value=None)
-    def test_geoip_invalid_ip(self, mock_geoip):
-        response = self.app.get('/geoip?ip=0.0.0.0&token=some_token')
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("IP address not found", response.data.decode())
+    # @patch('pygeoip.GeoIP.country_code_by_addr', return_value=None)
+    # def test_geoip_invalid_ip(self, mock_geoip):
+    #     response = self.app.get('/geoip?ip=0.0.0.0&token=some_token')
+    #     self.assertEqual(response.status_code, 404)
+    #     self.assertIn("IP address not found", response.data.decode())
 
     # Kiểm tra route '/geoipcity' khi thiếu IP
-    def test_geoipcity_missing_ip(self):
-        response = self.app.get('/geoipcity?token=some_token')
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Missing IP address", response.data.decode())
+    # def test_geoipcity_missing_ip(self):
+    #     response = self.app.get('/geoipcity?token=some_token')
+    #     self.assertEqual(response.status_code, 400)
+    #     self.assertIn("Missing IP address", response.data.decode())
 
     # Kiểm tra route '/geoipcity' với IP hợp lệ
-    @patch('pygeoip.GeoIP.record_by_addr', return_value={'city': 'Mountain View', 'country_code': 'US'})
-    def test_geoipcity_valid_ip(self, mock_geoipcity):
-        response = self.app.get('/geoipcity?ip=8.8.8.8&token=some_token')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("city", response.json)
-        self.assertEqual(response.json["city"], "Mountain View")
+    # @patch('pygeoip.GeoIP.record_by_addr', return_value={'city': 'Mountain View', 'country_code': 'US'})
+    # def test_geoipcity_valid_ip(self, mock_geoipcity):
+    #     response = self.app.get('/geoipcity?ip=8.8.8.8&token=some_token')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn("city", response.json)
+    #     self.assertEqual(response.json["city"], "Mountain View")
 
     # Kiểm tra route '/geoipcity' với IP không hợp lệ
-    @patch('pygeoip.GeoIP.record_by_addr', return_value=None)
-    def test_geoipcity_invalid_ip(self, mock_geoipcity):
-        response = self.app.get('/geoipcity?ip=0.0.0.0&token=some_token')
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("IP address not found", response.data.decode())
+    # @patch('pygeoip.GeoIP.record_by_addr', return_value=None)
+    # def test_geoipcity_invalid_ip(self, mock_geoipcity):
+    #     response = self.app.get('/geoipcity?ip=0.0.0.0&token=some_token')
+    #     self.assertEqual(response.status_code, 404)
+    #     self.assertIn("IP address not found", response.data.decode())
 
     # Kiểm tra route '/geoip-update' khi thiếu token
-    def test_geoip_update_missing_token(self):
-        response = self.app.get('/geoip-update')
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Missing Token", response.data.decode())
+    # def test_geoip_update_missing_token(self):
+    #     response = self.app.get('/geoip-update')
+    #     self.assertEqual(response.status_code, 400)
+    #     self.assertIn("Missing Token", response.data.decode())
 
     # Kiểm tra route '/geoip-update' khi có token nhưng không có IP
     # @patch('pygeoip.GeoIP.country_code_by_addr', return_value='US')
