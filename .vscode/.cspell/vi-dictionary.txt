@@ -76,6 +76,7 @@ phep
 phép
 phiên
 phút
+PYTHONUNBUFFERED
 quyền
 sách
 suất

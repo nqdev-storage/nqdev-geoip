@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     container_name: geoip
-    restart: always
+    restart: unless-stopped
     # network_mode: "host"
     ports:
       - 8002:5000
@@ -15,8 +15,9 @@ services:
       # - ./static:/app/static
       # - ./api/utils/credentials:/app/api/utils/credentials
     environment:
-      TZ: "Asia/Ho_Chi_Minh" # Đặt timezone tại đây
-      # DJANGO_SETTINGS_MODULE: vhs_sms_tts.settings
+      - TZ=Asia/Ho_Chi_Minh # Đặt timezone tại đây
+      - PYTHONUNBUFFERED=1
+      # - DJANGO_SETTINGS_MODULE=vhs_sms_tts.settings
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -34,4 +35,5 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-size: "5g"
+        max-size: "100MB"
+        max-file: "3" # Giới hạn 3 file log, mỗi file tối đa 100MB
