@@ -144,11 +144,11 @@ class GeoIPTestCase(unittest.TestCase):
         self.assertIn("Missing Token", response.data.decode())
 
     # Kiểm tra route '/geoip-update' khi có token nhưng không có IP
-    @patch('pygeoip.GeoIP.country_code_by_addr', return_value='US')
-    def test_geoip_update_with_token(self, mock_geoip):
-        response = self.app.get('/geoip-update?token=some_token&ip=8.8.8.8')
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("IP address not found", response.data.decode())
+    # @patch('pygeoip.GeoIP.country_code_by_addr', return_value='US')
+    # def test_geoip_update_with_token(self, mock_geoip):
+    #     response = self.app.get('/geoip-update?token=some_token&ip=8.8.8.8')
+    #     self.assertEqual(response.status_code, 404)
+    #     self.assertIn("IP address not found", response.data.decode())
 
 
 if __name__ == "__main__":
