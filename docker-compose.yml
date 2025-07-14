@@ -1,37 +1,37 @@
 services:
 
-    esms-geoip:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        image: vhs/esms-geoip:latest
-        container_name: esms-geoip
-        restart: always
-        # network_mode: "host"
-        ports:
-            - 8002:5000
-        volumes:
-            - ./dbs:/app/dbs
-            # - ./static:/app/static
-            # - ./api/utils/credentials:/app/api/utils/credentials
-        environment:
-            TZ: "Asia/Ho_Chi_Minh" # Đặt timezone tại đây
-            # DJANGO_SETTINGS_MODULE: vhs_sms_tts.settings
-        dns:
-            - 8.8.8.8
-            - 8.8.4.4
-            - 1.1.1.1
-            - 1.0.0.1
-        deploy:
-            resources:
-                limits:
-                    # cpus: "0.80" # Giới hạn 80% CPU
-                    cpus: "1" # Giới hạn container sử dụng tối đa 10 lõi CPU
-                    memory: "1G" # Giới hạn 3.2GB RAM (80% của 4GB)
-                reservations:
-                    cpus: "0.25" # Đảm bảo container có ít nhất 25% CPU
-                    memory: "256M" # Đảm bảo container có ít nhất 256MB RAM
-        logging:
-            driver: "json-file"
-            options:
-                max-size: "5g"
+  geoip:
+    image: ghcr.io/nqdev-storage/nqdev-geoip:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: geoip
+    restart: always
+    # network_mode: "host"
+    ports:
+      - 8002:5000
+    volumes:
+      - ./dbs:/app/dbs
+      # - ./static:/app/static
+      # - ./api/utils/credentials:/app/api/utils/credentials
+    environment:
+      TZ: "Asia/Ho_Chi_Minh" # Đặt timezone tại đây
+      # DJANGO_SETTINGS_MODULE: vhs_sms_tts.settings
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 1.1.1.1
+      - 1.0.0.1
+    deploy:
+      resources:
+        limits:
+          # cpus: "0.80" # Giới hạn 80% CPU
+          cpus: "1" # Giới hạn container sử dụng tối đa 10 lõi CPU
+          memory: "1G" # Giới hạn 3.2GB RAM (80% của 4GB)
+        reservations:
+          cpus: "0.25" # Đảm bảo container có ít nhất 25% CPU
+          memory: "256M" # Đảm bảo container có ít nhất 256MB RAM
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5g"
