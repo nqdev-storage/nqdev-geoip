@@ -1,3 +1,36 @@
 {
-    "python.pythonPath": "env\\Scripts\\python.exe"
+  // Controls if quick suggestions should show up while typing
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on",
+    "other": "on"
+  },
+
+  // Controls if suggestions should be accepted with "Enter" - in addition to "Tab". Helps to avoid ambiguity between inserting new lines and accepting suggestions.
+  "editor.acceptSuggestionOnEnter": "on",
+
+  // Controls the delay in ms after which quick suggestions will show up.
+  "editor.quickSuggestionsDelay": 10,
+
+  // Enable word based suggestions
+  "editor.wordBasedSuggestions": "matchingDocuments",
+
+  // Enable parameter hints
+  // "editor.parameterHints": true,
+
+  // Controls the default encoding for files
+  "files.encoding": "utf8",
+  // Controls the default end of line character for new files
+  "files.eol": "\n",
+
+  // https://marketplace.visualstudio.com/items?itemName=antfu.file-nesting
+  "explorer.fileNesting.enabled": false,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${basename}.html, ${basename}.css, ${basename}.spec.ts",
+    "*.js": "${basename}.test.js, ${basename}.map",
+    "*.component.ts": "${basename}.component.html, ${basename}.component.css, ${basename}.component.scss, ${basename}.component.spec.ts"
+  },
+
+  "python.pythonPath": "venv\\Scripts\\python.exe"
 }

@@ -4,73 +4,153 @@
 [![Update GeoIP Databases](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/geoip_update.yml/badge.svg)](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/geoip_update.yml)
 [![Build and Push Docker Image](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/nqdev-storage/nqdev-geoip/actions/workflows/docker-publish.yml)
 
-# nqdev-geoip
+# 📌 nqdev-geoip
 
-Free updated GeoIP legacy databases
+Nền tảng cung cấp miễn phí cơ sở dữ liệu GeoIP legacy và GeoLite2, cập nhật định kỳ, phục vụ nhu cầu tra cứu vị trí địa lý theo địa chỉ IP.
 
-## libs
+## 🔍 Giới thiệu
 
-### env
+`nqdev-geoip` là dự án Python hỗ trợ:
 
--   `pip install virtualenv`
--   `virtualenv env -p E:\sys\services\Python\Python311\python.exe`
--   `.\env\Scripts\activate`
--   `deactivate`
--   `python -m pip freeze > requirements.txt` -> backup package
--   `pip install -r requirements.txt` -> restorage package
--   `python manage.py makemigrations`
--   `python manage.py migrate` -> tạo database, nếu chưa có sẵn database
--   `python manage.py runserver 0.0.0.0:8000` -> start for all ip
+-   Tra cứu vị trí IP bằng GeoIP legacy.
+-   Sử dụng hoặc tích hợp các database chuẩn GeoLite2.
+-   API Flask đơn giản để kiểm tra nhanh qua HTTP.
+-   Tích hợp CI/CD, Docker, tự động cập nhật dữ liệu.
 
-## docs
+Phù hợp cho:
 
--   https://mailfud.org/geoip-legacy/
-    -   You can use my [geoip_update.sh](https://mailfud.org/geoip-legacy/geoip_update.sh) script if needed, instructions found within. Always carefully audit any downloaded scripts!
+-   Các ứng dụng phân tích IP.
+-   Hệ thống bảo mật.
+-   Cần dữ liệu định vị nội bộ, không phụ thuộc dịch vụ bên thứ ba.
 
-## curl test
+## ⚙️ Hướng dẫn cài đặt
 
-### GeoIP.dat
+### 1️⃣ Sử dụng môi trường ảo
+
+```bash
+pip install virtualenv
+virtualenv venv -p E:\sys\services\Python\Python311\python.exe
+.\venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+**Backup/recover package:**
+
+```bash
+python -m pip freeze > requirements.txt
+pip install -r requirements.txt
+```
+
+### 2️⃣ Khởi tạo database (nếu có)
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 3️⃣ Chạy server Flask
+
+```bash
+python manage.py runserver 0.0.0.0:8000
+```
+
+## 📦 API RESTful
+
+### 🛰 GeoIP Legacy - Country Lookup
 
 ```bash
 curl --location 'http://localhost:5000/geoip?ip=185.213.82.249'
 ```
 
-### GeoIPCity.dat
+### 🌐 GeoIP Legacy - City Lookup
 
 ```bash
 curl --location 'http://localhost:5000/geoipcity?ip=185.213.82.249'
 ```
 
-### Other
+### 📸 Instagram GetInfo (mẫu tham khảo)
 
 ```bash
 curl --location 'http://localhost:5000/instagram/getinfo?username=bngoc.winwin'
 ```
 
----
+## 📚 Sử dụng thư viện Python
 
-# GeoLite.mmdb
+```python
+from nqdev_geoip import GeoIP
 
-[MaxMind's GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) Country, City, and ASN databases
+gi = GeoIP()
+result = gi.lookup('8.8.8.8')
 
-## Download
+print(result)
+# {
+#   'country': 'US',
+#   'country_name': 'United States',
+#   ...
+# }
+```
 
-### URL1
+## 🛠 Cập nhật dữ liệu
+
+-   Tự động thông qua workflow CI/CD.
+-   Có thể thủ công nếu cần:
+    ```python
+    from nqdev_geoip import GeoIP
+    gi = GeoIP()
+    gi.update_database()
+    ```
+-   Hoặc tải về trực tiếp tại:
+    -   https://mailfud.org/geoip-legacy/
+    -   Script: geoip_update.sh
+
+## 📦 Docker Image
+
+Docker hỗ trợ xây dựng và triển khai dễ dàng:
+
+```bash
+docker build -t nqdev-geoip .
+docker run -p 5000:5000 nqdev-geoip
+```
+
+Docker Image chính thức sẽ được cập nhật qua workflow tự động.
+
+## 🌐 GeoLite2.mmdb Database
+
+Tích hợp GeoLite2 (Country, City, ASN) từ MaxMind:
+
+### 📥 Tải nhanh:
 
 -   [GeoLite2-ASN.mmdb](https://git.io/GeoLite2-ASN.mmdb)
 -   [GeoLite2-City.mmdb](https://git.io/GeoLite2-City.mmdb)
 -   [GeoLite2-Country.mmdb](https://git.io/GeoLite2-Country.mmdb)
 
-### URL2
+### Hoặc từ mirror:
 
 -   [GeoLite2-ASN.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-ASN.mmdb)
 -   [GeoLite2-City.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb)
 -   [GeoLite2-Country.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb)
 
-## License
+## 📜 Lịch sử phiên bản (CHANGELOG)
 
--   Database and Contents Copyright (c) [MaxMind](https://www.maxmind.com/), Inc.
--   [GeoLite2 End User License Agreement](https://www.maxmind.com/en/geolite2/eula)
--   [Creative Commons Corporation Attribution-ShareAlike 4.0 International License (the "Creative Commons License")](https://creativecommons.org/licenses/by-sa/4.0/)
+Thông tin cập nhật và thay đổi của dự án được ghi chi tiết tại: ➡️ [Xem file CHANGELOG.md](/CHANGELOG.md)
+
+## 🔐 Chính sách bảo mật
+
+Vui lòng tham khảo chính sách công bố lỗ hổng bảo mật và quy trình báo cáo tại: ➡️ [Xem file SECURITY.md](/SECURITY.md)
+
+## 📑 Giấy phép
+
+-   GeoIP Legacy Database: Theo giấy phép nguồn mở từ [MaxMind](https://www.maxmind.com/).
+-   GeoLite2 Database:
+    -   © [MaxMind](https://www.maxmind.com/), Inc.
+    -   [GeoLite2 End User License Agreement](https://www.maxmind.com/en/geolite2/eula)
+    -   [Creative Commons License](https://creativecommons.org/licenses/by-sa/4.0/)
+
+## ✅ Tổng kết
+
+`nqdev-geoip` là một giải pháp miễn phí, hiệu quả, và dễ tích hợp cho các ứng dụng Python hoặc hệ thống backend có nhu cầu tra cứu vị trí địa lý IP, với khả năng cập nhật dữ liệu tự động qua CI/CD và Docker.
 
 ---
+
+**👉 Đóng góp hoặc liên hệ:**
+Hãy mở issue hoặc pull request nếu bạn có đề xuất nâng cấp hoặc phát hiện lỗi.
