@@ -17,6 +17,9 @@ from utils.ip_ban import (
     is_ip_banned, ban_ip, unban_ip,
     is_suspicious_request, get_client_ip
 )
+from utils.private_cidr import (
+    is_private_cidr, get_private_cidr_response, get_private_cidr_country_code
+)
 
 # Phiên bản ứng dụng
 __version__ = "1.0.0"
@@ -165,6 +168,14 @@ def get_geoip_info():
     if not ip:
         return jsonify({"error": "Missing IP address"}), 400
 
+    # Kiểm tra nếu IP thuộc dải private CIDR
+    if is_private_cidr(ip):
+        country_code = get_private_cidr_country_code()
+        if country_code:
+            return jsonify({"country": country_code})
+        # Fallback to regular lookup if no default configured
+        logging.debug(f"Private IP {ip} detected but no default configured")
+
     # Lấy thông tin quốc gia từ địa chỉ IP
     try:
         country = geoip.country_code_by_addr(ip)
@@ -209,6 +220,14 @@ def get_geoip_city_info():
     token = request.args.get('token')
     if not ip:
         return jsonify({"error": "Missing IP address"}), 400
+
+    # Kiểm tra nếu IP thuộc dải private CIDR
+    if is_private_cidr(ip):
+        private_response = get_private_cidr_response()
+        if private_response:
+            return jsonify(private_response)
+        # Fallback to regular lookup if no default configured
+        logging.debug(f"Private IP {ip} detected but no default configured")
 
     # Lấy thông tin địa lý từ địa chỉ IP
     try:
