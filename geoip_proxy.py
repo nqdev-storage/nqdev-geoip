@@ -10,6 +10,7 @@ from routes.ip2location_routes import ip2location_bp
 from routes.user_routes import user_bp
 from routes.admin.ban_routes import admin_ban_bp, ADMIN_ENDPOINTS
 
+from config import Config
 from geoip_update import download_and_extract, url_geoip, url_geoip_city
 from utils.response_helper import okResult
 from utils.ip_ban import (
