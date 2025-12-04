@@ -1,0 +1,22 @@
+{
+  "private_cidrs": [
+    "10.0.0.0/8",
+    "172.16.0.0/12",
+    "192.168.0.0/16"
+  ],
+  "default_response": {
+    "area_code": 0,
+    "city": null,
+    "continent": "AS",
+    "country_code": "VN",
+    "country_code3": "VNM",
+    "country_name": "Vietnam",
+    "dma_code": 0,
+    "latitude": 16.16669999999999,
+    "longitude": 107.83330000000001,
+    "metro_code": null,
+    "postal_code": null,
+    "region_code": "00",
+    "time_zone": "Asia/Phnom_Penh"
+  }
+}
