@@ -21,7 +21,7 @@ jobs:
       matrix:
         # The list of all available versions can be found here:
         # https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json
-        python-version: [3.14.1]
+        python-version: [3.13]
 
     steps:
       - uses: actions/checkout@v4
