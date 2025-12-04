@@ -153,14 +153,14 @@ class GeoIPProxyBanTestCase(unittest.TestCase):
         ban_ip("10.0.0.1", "Test")
 
         # Use the default admin token from config
-        response = self.app.get('/admin/ban-list?token=your_admin_token_here')
+        response = self.app.get('/admin/ban/list?token=your_admin_token_here')
         self.assertEqual(response.status_code, 200)
         data = response.get_json()
         self.assertIn("10.0.0.1", data["payload"])
 
     def test_admin_ban_ip(self):
         """Kiểm tra API ban IP"""
-        response = self.app.post('/admin/ban?token=your_admin_token_here&ip=10.0.0.2&reason=test')
+        response = self.app.post('/admin/ban/add?token=your_admin_token_here&ip=10.0.0.2&reason=test')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(is_ip_banned("10.0.0.2"))
 
@@ -168,13 +168,13 @@ class GeoIPProxyBanTestCase(unittest.TestCase):
         """Kiểm tra API unban IP"""
         ban_ip("10.0.0.3", "Test")
 
-        response = self.app.post('/admin/unban?token=your_admin_token_here&ip=10.0.0.3')
+        response = self.app.post('/admin/ban/unban?token=your_admin_token_here&ip=10.0.0.3')
         self.assertEqual(response.status_code, 200)
         self.assertFalse(is_ip_banned("10.0.0.3"))
 
     def test_admin_invalid_token(self):
         """Kiểm tra admin API với token không hợp lệ"""
-        response = self.app.get('/admin/ban-list?token=invalid_token')
+        response = self.app.get('/admin/ban/list?token=invalid_token')
         self.assertEqual(response.status_code, 401)
 
 
