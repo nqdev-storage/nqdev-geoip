@@ -28,3 +28,15 @@ def okResult(isSuccess: bool, message: str, payload: object = {}, error: str = '
         # ẩn lỗi nếu production
         # "error": None if ENV == "production" else error,
     }), (500 if http_code < 0 else http_code)
+
+
+def errorResult(success, message, status_code=400):
+    """
+    Standard response for failed requests.
+    """
+    response = {
+        "success": success,
+        "message": message,
+        "error_code": status_code
+    }
+    return jsonify(response), status_code

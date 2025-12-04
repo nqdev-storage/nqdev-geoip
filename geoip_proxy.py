@@ -6,7 +6,7 @@ import datetime
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
-from routes.instagram_routes import instagram_bp
+from routes.ip2location_routes import ip2location_bp
 from routes.user_routes import user_bp
 
 from geoip_update import download_and_extract, url_geoip, url_geoip_city
@@ -32,13 +32,15 @@ logging.basicConfig(
 
 # https://flask.palletsprojects.com/en/stable/
 app = Flask(__name__)
-Swagger(app=app)    # Khởi tạo Swagger
+app.config.from_object('config.Config')  # Load your config
+# Initialize Swagger
+Swagger(app=app)
 
 # Xử lý reverse proxy (nếu có) - ví dụ khi ứng dụng chạy sau Nginx hoặc HAProxy
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
-# Đăng ký route
-app.register_blueprint(instagram_bp)
+# Register blueprints
+app.register_blueprint(ip2location_bp)
 app.register_blueprint(user_bp)
 
 # Tải tệp GeoIP for V2Ray
