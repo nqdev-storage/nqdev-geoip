@@ -18,8 +18,8 @@ logging.basicConfig(
 )
 
 # URLs của các file GeoIP
-url_geoip = "https://mailfud.org/geoip-legacy/GeoIP.dat.gz"
-url_geoip_city = "https://mailfud.org/geoip-legacy/GeoIPCity.dat.gz"
+url_geoip = "http://mailfud.org/geoip-legacy/GeoIP.dat.gz"
+url_geoip_city = "http://mailfud.org/geoip-legacy/GeoIPCity.dat.gz"
 
 # Đảm bảo thư mục ./dbs tồn tại
 os.makedirs('./dbs', exist_ok=True)
