@@ -8,9 +8,15 @@ from logging.handlers import TimedRotatingFileHandler
 
 from routes.ip2location_routes import ip2location_bp
 from routes.user_routes import user_bp
+from routes.admin.ban_routes import admin_ban_bp, ADMIN_ENDPOINTS
 
+from config import Config
 from geoip_update import download_and_extract, url_geoip, url_geoip_city
 from utils.response_helper import okResult
+from utils.ip_ban import (
+    is_ip_banned, ban_ip, unban_ip,
+    is_suspicious_request, get_client_ip
+)
 
 # Phiên bản ứng dụng
 __version__ = "1.0.0"
@@ -45,6 +51,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 # Register blueprints
 app.register_blueprint(ip2location_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(admin_ban_bp)
 
 # Tải tệp GeoIP for V2Ray
 # Thay đổi đường dẫn tới tệp `.dat` của bạn
@@ -54,6 +61,31 @@ geoip = pygeoip.GeoIP(GeoIP_path)
 # Tải tệp GeoIPCity cho V2Ray
 GeoIPCity_path = './dbs/GeoIPCity.dat'
 GeoIPCity = pygeoip.GeoIP(GeoIPCity_path)
+
+
+@app.before_request
+def check_banned_ip():
+    """
+    Middleware kiểm tra IP bị cấm và phát hiện request đáng ngờ.
+    Tự động ban IP nếu phát hiện request đáng ngờ.
+    Admin endpoints được miễn kiểm tra để tránh khóa admin.
+    """
+    # Exempt admin endpoints from ban checks
+    if request.path in ADMIN_ENDPOINTS:
+        return None
+
+    client_ip = get_client_ip(request)
+
+    # Kiểm tra nếu IP đã bị ban
+    if is_ip_banned(client_ip):
+        logging.warning(f"Blocked request from banned IP: {client_ip} - {request.path}")
+        return jsonify({"error": "Access denied"}), 403
+
+    # Phát hiện request đáng ngờ và tự động ban IP
+    if is_suspicious_request(request.path):
+        logging.warning(f"Suspicious request detected from IP: {client_ip} - {request.path}")
+        ban_ip(client_ip, reason=f"Suspicious request: {request.path}")
+        return jsonify({"error": "Access denied"}), 403
 
 
 @app.route(rule='/', methods=['GET'])
@@ -192,6 +224,11 @@ def get_geoip_city_info():
         logging.error("Exception occurred", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
 
-
 if __name__ == '__main__':
+    # Log thông tin về việc khởi động server trong môi trường sản xuất
+    print(f'Version: {__version__}')
+    print(f'ApiDocs on http://localhost:5000/apidocs/')
+    print('Starting Flask development server on http://localhost:5000')
+    print(f'Admin token: {Config.ADMIN_TOKEN}')
+
     app.run(host='0.0.0.0', port=5000, debug=False)
