@@ -11,6 +11,10 @@ from routes.user_routes import user_bp
 
 from geoip_update import download_and_extract, url_geoip, url_geoip_city
 from utils.response_helper import okResult
+from utils.ip_ban import (
+    is_ip_banned, ban_ip, unban_ip, get_ban_list,
+    is_suspicious_request, get_client_ip
+)
 
 # Phiên bản ứng dụng
 __version__ = "1.0.0"
@@ -54,6 +58,26 @@ geoip = pygeoip.GeoIP(GeoIP_path)
 # Tải tệp GeoIPCity cho V2Ray
 GeoIPCity_path = './dbs/GeoIPCity.dat'
 GeoIPCity = pygeoip.GeoIP(GeoIPCity_path)
+
+
+@app.before_request
+def check_banned_ip():
+    """
+    Middleware kiểm tra IP bị cấm và phát hiện request đáng ngờ.
+    Tự động ban IP nếu phát hiện request đáng ngờ.
+    """
+    client_ip = get_client_ip(request)
+
+    # Kiểm tra nếu IP đã bị ban
+    if is_ip_banned(client_ip):
+        logging.warning(f"Blocked request from banned IP: {client_ip} - {request.path}")
+        return jsonify({"error": "Access denied"}), 403
+
+    # Phát hiện request đáng ngờ và tự động ban IP
+    if is_suspicious_request(request.path):
+        logging.warning(f"Suspicious request detected from IP: {client_ip} - {request.path}")
+        ban_ip(client_ip, reason=f"Suspicious request: {request.path}")
+        return jsonify({"error": "Access denied"}), 403
 
 
 @app.route(rule='/', methods=['GET'])
@@ -191,6 +215,125 @@ def get_geoip_city_info():
     except Exception as e:
         logging.error("Exception occurred", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route(rule='/admin/ban-list', methods=['GET'])
+def get_banned_ips():
+    """
+    Lấy danh sách IP bị cấm
+    ---
+    parameters:
+      - name: token
+        in: query
+        type: string
+        required: true
+        description: Token xác thực admin
+    responses:
+      200:
+        description: Trả về danh sách IP bị cấm
+      401:
+        description: Thiếu hoặc sai token
+    tags:
+      - "Admin"
+    """
+    token = request.args.get('token')
+    if not token:
+        return okResult(isSuccess=False, message="Missing Token", http_code=401)
+
+    ban_list = get_ban_list()
+    return okResult(isSuccess=True, message="Ban list retrieved", payload=ban_list, http_code=200)
+
+
+@app.route(rule='/admin/ban', methods=['POST'])
+def add_banned_ip():
+    """
+    Thêm IP vào danh sách cấm
+    ---
+    parameters:
+      - name: token
+        in: query
+        type: string
+        required: true
+        description: Token xác thực admin
+      - name: ip
+        in: query
+        type: string
+        required: true
+        description: Địa chỉ IP cần cấm
+      - name: reason
+        in: query
+        type: string
+        required: false
+        description: Lý do cấm
+    responses:
+      200:
+        description: IP đã được thêm vào danh sách cấm
+      400:
+        description: Thiếu IP
+      401:
+        description: Thiếu token
+    tags:
+      - "Admin"
+    """
+    token = request.args.get('token')
+    if not token:
+        return okResult(isSuccess=False, message="Missing Token", http_code=401)
+
+    ip = request.args.get('ip')
+    if not ip:
+        return okResult(isSuccess=False, message="Missing IP address", http_code=400)
+
+    reason = request.args.get('reason', 'Manual ban by admin')
+    success = ban_ip(ip, reason)
+
+    if success:
+        return okResult(isSuccess=True, message=f"IP {ip} has been banned", http_code=200)
+    else:
+        return okResult(isSuccess=False, message="Failed to ban IP", http_code=500)
+
+
+@app.route(rule='/admin/unban', methods=['POST'])
+def remove_banned_ip():
+    """
+    Xóa IP khỏi danh sách cấm
+    ---
+    parameters:
+      - name: token
+        in: query
+        type: string
+        required: true
+        description: Token xác thực admin
+      - name: ip
+        in: query
+        type: string
+        required: true
+        description: Địa chỉ IP cần bỏ cấm
+    responses:
+      200:
+        description: IP đã được xóa khỏi danh sách cấm
+      400:
+        description: Thiếu IP
+      401:
+        description: Thiếu token
+      404:
+        description: IP không có trong danh sách cấm
+    tags:
+      - "Admin"
+    """
+    token = request.args.get('token')
+    if not token:
+        return okResult(isSuccess=False, message="Missing Token", http_code=401)
+
+    ip = request.args.get('ip')
+    if not ip:
+        return okResult(isSuccess=False, message="Missing IP address", http_code=400)
+
+    success = unban_ip(ip)
+
+    if success:
+        return okResult(isSuccess=True, message=f"IP {ip} has been unbanned", http_code=200)
+    else:
+        return okResult(isSuccess=False, message="IP not found in ban list", http_code=404)
 
 
 if __name__ == '__main__':
