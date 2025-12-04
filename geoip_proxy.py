@@ -59,13 +59,27 @@ geoip = pygeoip.GeoIP(GeoIP_path)
 GeoIPCity_path = './dbs/GeoIPCity.dat'
 GeoIPCity = pygeoip.GeoIP(GeoIPCity_path)
 
+# Admin endpoints exempt from IP ban checks
+ADMIN_ENDPOINTS = ['/admin/ban-list', '/admin/ban', '/admin/unban']
+
+
+def validate_admin_token(token: str) -> bool:
+    """Validate admin token against configured value."""
+    expected_token = app.config.get('ADMIN_TOKEN', 'your_admin_token_here')
+    return token == expected_token
+
 
 @app.before_request
 def check_banned_ip():
     """
     Middleware kiểm tra IP bị cấm và phát hiện request đáng ngờ.
     Tự động ban IP nếu phát hiện request đáng ngờ.
+    Admin endpoints được miễn kiểm tra để tránh khóa admin.
     """
+    # Exempt admin endpoints from ban checks
+    if request.path in ADMIN_ENDPOINTS:
+        return None
+
     client_ip = get_client_ip(request)
 
     # Kiểm tra nếu IP đã bị ban
@@ -237,8 +251,8 @@ def get_banned_ips():
       - "Admin"
     """
     token = request.args.get('token')
-    if not token:
-        return okResult(isSuccess=False, message="Missing Token", http_code=401)
+    if not token or not validate_admin_token(token):
+        return okResult(isSuccess=False, message="Invalid or missing token", http_code=401)
 
     ban_list = get_ban_list()
     return okResult(isSuccess=True, message="Ban list retrieved", payload=ban_list, http_code=200)
@@ -276,8 +290,8 @@ def add_banned_ip():
       - "Admin"
     """
     token = request.args.get('token')
-    if not token:
-        return okResult(isSuccess=False, message="Missing Token", http_code=401)
+    if not token or not validate_admin_token(token):
+        return okResult(isSuccess=False, message="Invalid or missing token", http_code=401)
 
     ip = request.args.get('ip')
     if not ip:
@@ -321,8 +335,8 @@ def remove_banned_ip():
       - "Admin"
     """
     token = request.args.get('token')
-    if not token:
-        return okResult(isSuccess=False, message="Missing Token", http_code=401)
+    if not token or not validate_admin_token(token):
+        return okResult(isSuccess=False, message="Invalid or missing token", http_code=401)
 
     ip = request.args.get('ip')
     if not ip:

@@ -33,7 +33,6 @@ SUSPICIOUS_PATTERNS = [
     r'/actuator',
     r'/api/v1/pods',
     r'/login\.action',
-    r'/\.well-known/security\.txt',
     r'/console',
     r'/debug',
     r'/trace',
@@ -140,21 +139,28 @@ def get_client_ip(request) -> str:
     """
     Get the real client IP from a Flask request, handling proxies.
 
+    Note: X-Forwarded-For header is trusted as the app runs behind ProxyFix
+    middleware which handles proxy trust appropriately.
+
     Args:
         request: Flask request object
 
     Returns:
         The client IP address
     """
-    # Check for forwarded headers (in order of preference)
+    # Fall back to remote_addr first (ProxyFix handles X-Forwarded-For)
+    if request.remote_addr:
+        return request.remote_addr
+
+    # If remote_addr is not available, check headers as fallback
     forwarded_for = request.headers.get('X-Forwarded-For')
     if forwarded_for:
-        # X-Forwarded-For can contain multiple IPs, get the first one
+        # Get the first IP in the chain (client IP)
         return forwarded_for.split(',')[0].strip()
 
     real_ip = request.headers.get('X-Real-IP')
     if real_ip:
         return real_ip.strip()
 
-    # Fall back to remote_addr
-    return request.remote_addr or '0.0.0.0'
+    # Return 'unknown' if no IP can be determined
+    return 'unknown'

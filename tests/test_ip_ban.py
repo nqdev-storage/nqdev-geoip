@@ -92,22 +92,31 @@ class IPBanTestCase(unittest.TestCase):
         self.assertEqual(ip, "192.168.1.1")
 
     def test_get_client_ip_forwarded(self):
-        """Kiểm tra lấy IP client qua X-Forwarded-For"""
+        """Kiểm tra lấy IP client qua X-Forwarded-For khi remote_addr trống"""
         mock_request = MagicMock()
         mock_request.headers = {"X-Forwarded-For": "10.0.0.1, 10.0.0.2"}
-        mock_request.remote_addr = "192.168.1.1"
+        mock_request.remote_addr = None
 
         ip = get_client_ip(mock_request)
         self.assertEqual(ip, "10.0.0.1")
 
     def test_get_client_ip_real_ip(self):
-        """Kiểm tra lấy IP client qua X-Real-IP"""
+        """Kiểm tra lấy IP client qua X-Real-IP khi remote_addr trống"""
         mock_request = MagicMock()
         mock_request.headers = {"X-Real-IP": "10.0.0.3"}
-        mock_request.remote_addr = "192.168.1.1"
+        mock_request.remote_addr = None
 
         ip = get_client_ip(mock_request)
         self.assertEqual(ip, "10.0.0.3")
+
+    def test_get_client_ip_unknown(self):
+        """Kiểm tra fallback khi không có IP"""
+        mock_request = MagicMock()
+        mock_request.headers = {}
+        mock_request.remote_addr = None
+
+        ip = get_client_ip(mock_request)
+        self.assertEqual(ip, "unknown")
 
 
 class GeoIPProxyBanTestCase(unittest.TestCase):
@@ -143,14 +152,15 @@ class GeoIPProxyBanTestCase(unittest.TestCase):
         # First, ban an IP
         ban_ip("10.0.0.1", "Test")
 
-        response = self.app.get('/admin/ban-list?token=test')
+        # Use the default admin token from config
+        response = self.app.get('/admin/ban-list?token=your_admin_token_here')
         self.assertEqual(response.status_code, 200)
         data = response.get_json()
         self.assertIn("10.0.0.1", data["payload"])
 
     def test_admin_ban_ip(self):
         """Kiểm tra API ban IP"""
-        response = self.app.post('/admin/ban?token=test&ip=10.0.0.2&reason=test')
+        response = self.app.post('/admin/ban?token=your_admin_token_here&ip=10.0.0.2&reason=test')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(is_ip_banned("10.0.0.2"))
 
@@ -158,9 +168,14 @@ class GeoIPProxyBanTestCase(unittest.TestCase):
         """Kiểm tra API unban IP"""
         ban_ip("10.0.0.3", "Test")
 
-        response = self.app.post('/admin/unban?token=test&ip=10.0.0.3')
+        response = self.app.post('/admin/unban?token=your_admin_token_here&ip=10.0.0.3')
         self.assertEqual(response.status_code, 200)
         self.assertFalse(is_ip_banned("10.0.0.3"))
+
+    def test_admin_invalid_token(self):
+        """Kiểm tra admin API với token không hợp lệ"""
+        response = self.app.get('/admin/ban-list?token=invalid_token')
+        self.assertEqual(response.status_code, 401)
 
 
 if __name__ == '__main__':
