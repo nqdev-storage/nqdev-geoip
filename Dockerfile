@@ -28,8 +28,11 @@ EXPOSE 8000
 # ✅ Không cần khai báo ENV nếu settings đã định nghĩa sẵn
 # ENV DJANGO_SETTINGS_MODULE=...
 # ENV DJANGO_SETTINGS_MODULE=vhs_sms_tts.settings
+ENV FLASK_APP=geoip_proxy.py
+ENV FLASK_ENV=production
 
 # ✅ Chạy app bằng waitress (ổn định hơn Flask built-in)
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # CMD ["python", "geoip_proxy.py"]
+# CMD [ "flask", "--app", "geoip_proxy.py", "run", "--host=0.0.0.0", "--port=5000" ]
 CMD ["python", "waitress_geoip_proxy.py"]
