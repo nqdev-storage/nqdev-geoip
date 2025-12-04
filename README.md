@@ -12,16 +12,16 @@ Nền tảng cung cấp miễn phí cơ sở dữ liệu GeoIP legacy và GeoLit
 
 `nqdev-geoip` là dự án Python hỗ trợ:
 
--   Tra cứu vị trí IP bằng GeoIP legacy.
--   Sử dụng hoặc tích hợp các database chuẩn GeoLite2.
--   API Flask đơn giản để kiểm tra nhanh qua HTTP.
--   Tích hợp CI/CD, Docker, tự động cập nhật dữ liệu.
+- Tra cứu vị trí IP bằng GeoIP legacy.
+- Sử dụng hoặc tích hợp các database chuẩn GeoLite2.
+- API Flask đơn giản để kiểm tra nhanh qua HTTP.
+- Tích hợp CI/CD, Docker, tự động cập nhật dữ liệu.
 
 Phù hợp cho:
 
--   Các ứng dụng phân tích IP.
--   Hệ thống bảo mật.
--   Cần dữ liệu định vị nội bộ, không phụ thuộc dịch vụ bên thứ ba.
+- Các ứng dụng phân tích IP.
+- Hệ thống bảo mật.
+- Cần dữ liệu định vị nội bộ, không phụ thuộc dịch vụ bên thứ ba.
 
 ## ⚙️ Hướng dẫn cài đặt
 
@@ -92,16 +92,17 @@ print(result)
 
 ## 🛠 Cập nhật dữ liệu
 
--   Tự động thông qua workflow CI/CD.
--   Có thể thủ công nếu cần:
-    ```python
-    from nqdev_geoip import GeoIP
-    gi = GeoIP()
-    gi.update_database()
-    ```
--   Hoặc tải về trực tiếp tại:
-    -   https://mailfud.org/geoip-legacy/
-    -   Script: geoip_update.sh
+- Tự động thông qua workflow CI/CD.
+- Có thể thủ công nếu cần:
+  ```python
+  from nqdev_geoip import GeoIP
+  gi = GeoIP()
+  gi.update_database()
+  ```
+- Hoặc tải về trực tiếp tại:
+  - https://mailfud.org/geoip-legacy/
+  - Script: geoip_update.sh
+- https://github.com/mschmitt/GeoLite2xtables
 
 ## 📦 Docker Image
 
@@ -120,15 +121,15 @@ Tích hợp GeoLite2 (Country, City, ASN) từ MaxMind:
 
 ### 📥 Tải nhanh:
 
--   [GeoLite2-ASN.mmdb](https://git.io/GeoLite2-ASN.mmdb)
--   [GeoLite2-City.mmdb](https://git.io/GeoLite2-City.mmdb)
--   [GeoLite2-Country.mmdb](https://git.io/GeoLite2-Country.mmdb)
+- [GeoLite2-ASN.mmdb](https://git.io/GeoLite2-ASN.mmdb)
+- [GeoLite2-City.mmdb](https://git.io/GeoLite2-City.mmdb)
+- [GeoLite2-Country.mmdb](https://git.io/GeoLite2-Country.mmdb)
 
 ### Hoặc từ mirror:
 
--   [GeoLite2-ASN.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-ASN.mmdb)
--   [GeoLite2-City.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb)
--   [GeoLite2-Country.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb)
+- [GeoLite2-ASN.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-ASN.mmdb)
+- [GeoLite2-City.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb)
+- [GeoLite2-Country.mmdb](https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb)
 
 ## 📜 Lịch sử phiên bản (CHANGELOG)
 
@@ -140,11 +141,11 @@ Vui lòng tham khảo chính sách công bố lỗ hổng bảo mật và quy tr
 
 ## 📑 Giấy phép
 
--   GeoIP Legacy Database: Theo giấy phép nguồn mở từ [MaxMind](https://www.maxmind.com/).
--   GeoLite2 Database:
-    -   © [MaxMind](https://www.maxmind.com/), Inc.
-    -   [GeoLite2 End User License Agreement](https://www.maxmind.com/en/geolite2/eula)
-    -   [Creative Commons License](https://creativecommons.org/licenses/by-sa/4.0/)
+- GeoIP Legacy Database: Theo giấy phép nguồn mở từ [MaxMind](https://www.maxmind.com/).
+- GeoLite2 Database:
+  - © [MaxMind](https://www.maxmind.com/), Inc.
+  - [GeoLite2 End User License Agreement](https://www.maxmind.com/en/geolite2/eula)
+  - [Creative Commons License](https://creativecommons.org/licenses/by-sa/4.0/)
 
 ## ✅ Tổng kết
 

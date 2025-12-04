@@ -12,6 +12,9 @@ from routes.user_routes import user_bp
 from geoip_update import download_and_extract, url_geoip, url_geoip_city
 from utils.response_helper import okResult
 
+# Phiên bản ứng dụng
+__version__ = "1.0.0"
+
 # Cấu hình logger
 logging.basicConfig(
     # Chọn mức độ log (DEBUG, INFO, WARNING, ERROR, CRITICAL)
