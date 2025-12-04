@@ -1,55 +1,55 @@
 name: Update GeoIP Databases
 
 on:
-    schedule:
-        # https://crontab.guru/#0_0_*_*_0
-        - cron: "0 0 * * 0" # Chạy vào mỗi Chủ Nhật lúc 00:00 UTC
-    workflow_dispatch: # Cho phép chạy thủ công
-    repository_dispatch:
+  schedule:
+    # https://crontab.guru/#0_0_*_*_0
+    - cron: "0 0 * * 0" # Chạy vào mỗi Chủ Nhật lúc 00:00 UTC
+  workflow_dispatch: # Cho phép chạy thủ công
+  repository_dispatch:
 
 permissions:
-    contents: write # Cấp quyền ghi để commit và push
+  contents: write # Cấp quyền ghi để commit và push
 
 jobs:
-    update_geoip:
-        runs-on: ubuntu-latest # Sử dụng môi trường Ubuntu
+  update_geoip:
+    runs-on: ubuntu-latest # Sử dụng môi trường Ubuntu
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v2
-              with:
-                  token: ${{ secrets.GH_TOKEN }} # Sử dụng PAT để có quyền push
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }} # Sử dụng PAT để có quyền push
 
-            - name: Set up Python
-              uses: actions/setup-python@v4
-              with:
-                  python-version: "3.x" # Cài đặt Python 3.x
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x" # Cài đặt Python 3.x
 
-            - name: Install dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install requests  # Cài đặt thư viện requests nếu chưa có
-                  pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests  # Cài đặt thư viện requests nếu chưa có
+          pip install -r requirements.txt
 
-            - name: Run waitress_geoip_update.py
-              run: |
-                  python waitress_geoip_update.py  # Chạy file waitress_geoip_update.py
+      - name: Run waitress_geoip_update.py
+        run: |
+          python waitress_geoip_update.py  # Chạy file waitress_geoip_update.py
 
-            - name: Configure Git
-              run: |
-                  git config --global user.name "github-actions"
-                  git config --global user.email "github-actions@github.com"
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
 
-            - name: Commit and push dbs folder
-              run: |
-                  # Lấy ngày giờ hiện tại làm version (YYYY-MM-DD)
-                  VERSION=$(date +"%Y-%m-%d")
+      - name: Commit and push dbs folder
+        run: |
+          # Lấy ngày giờ hiện tại làm version (YYYY-MM-DD)
+          VERSION=$(date +"%Y-%m-%d")
 
-                  # Kiểm tra xem có thay đổi nào trong thư mục ./dbs không
-                  git add ./dbs
-                  if git diff --cached --quiet; then
-                      echo "No changes to commit."
-                  else
-                      git commit -m "Update GeoIP databases - v$VERSION"
-                      git push origin main  # Đẩy lên nhánh main
-                  fi
+          # Kiểm tra xem có thay đổi nào trong thư mục ./dbs không
+          git add ./dbs
+          if git diff --cached --quiet; then
+              echo "No changes to commit."
+          else
+              git commit -m "Update GeoIP databases - v$VERSION"
+              git push origin main  # Đẩy lên nhánh main
+          fi
