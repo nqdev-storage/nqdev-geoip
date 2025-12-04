@@ -16,14 +16,28 @@ PRIVATE_CIDR_CONFIG_FILE = os.path.join(
     'private_cidr_config.json'
 )
 
+# Cache for configuration to avoid repeated file I/O
+_config_cache: Optional[Dict] = None
+_config_mtime: float = 0
+
 
 def _load_private_cidr_config() -> Dict:
-    """Load the private CIDR configuration from JSON file."""
+    """Load the private CIDR configuration from JSON file with caching."""
+    global _config_cache, _config_mtime
+
     if not os.path.exists(PRIVATE_CIDR_CONFIG_FILE):
         return {"private_cidrs": [], "default_response": {}}
+
     try:
+        # Check if file has been modified since last load
+        current_mtime = os.path.getmtime(PRIVATE_CIDR_CONFIG_FILE)
+        if _config_cache is not None and current_mtime == _config_mtime:
+            return _config_cache
+
         with open(PRIVATE_CIDR_CONFIG_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+            _config_cache = json.load(f)
+            _config_mtime = current_mtime
+            return _config_cache
     except (json.JSONDecodeError, IOError) as e:
         logging.error(f"Error loading private CIDR config: {e}")
         return {"private_cidrs": [], "default_response": {}}

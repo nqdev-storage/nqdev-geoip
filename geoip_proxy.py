@@ -173,6 +173,8 @@ def get_geoip_info():
         country_code = get_private_cidr_country_code()
         if country_code:
             return jsonify({"country": country_code})
+        # Fallback to regular lookup if no default configured
+        logging.debug(f"Private IP {ip} detected but no default configured")
 
     # Lấy thông tin quốc gia từ địa chỉ IP
     try:
@@ -224,6 +226,8 @@ def get_geoip_city_info():
         private_response = get_private_cidr_response()
         if private_response:
             return jsonify(private_response)
+        # Fallback to regular lookup if no default configured
+        logging.debug(f"Private IP {ip} detected but no default configured")
 
     # Lấy thông tin địa lý từ địa chỉ IP
     try:
