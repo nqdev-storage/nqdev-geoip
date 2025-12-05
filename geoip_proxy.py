@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flasgger import Swagger
 from werkzeug.middleware.proxy_fix import ProxyFix
+
+import os
 import pygeoip
 import datetime
 import logging
@@ -23,6 +25,10 @@ from utils.private_cidr import (
 
 # Phiên bản ứng dụng
 __version__ = "1.0.0"
+
+# Tạo thư mục logs nếu chưa có
+if not os.path.exists('logs'):
+    os.makedirs('logs')
 
 # Cấu hình logger
 logging.basicConfig(
@@ -81,12 +87,14 @@ def check_banned_ip():
 
     # Kiểm tra nếu IP đã bị ban
     if is_ip_banned(client_ip):
-        logging.warning(f"Blocked request from banned IP: {client_ip} - {request.path}")
+        logging.warning(
+            f"Blocked request from banned IP: {client_ip} - {request.path}")
         return jsonify({"error": "Access denied"}), 403
 
     # Phát hiện request đáng ngờ và tự động ban IP
     if is_suspicious_request(request.path):
-        logging.warning(f"Suspicious request detected from IP: {client_ip} - {request.path}")
+        logging.warning(
+            f"Suspicious request detected from IP: {client_ip} - {request.path}")
         ban_ip(client_ip, reason=f"Suspicious request: {request.path}")
         return jsonify({"error": "Access denied"}), 403
 
@@ -242,6 +250,7 @@ def get_geoip_city_info():
     except Exception as e:
         logging.error("Exception occurred", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
+
 
 if __name__ == '__main__':
     # Log thông tin về việc khởi động server trong môi trường sản xuất
