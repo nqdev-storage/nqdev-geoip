@@ -82,6 +82,32 @@ class IPBanTestCase(unittest.TestCase):
         self.assertFalse(is_suspicious_request("/geoipcity"))
         self.assertFalse(is_suspicious_request("/user/john"))
 
+    def test_is_suspicious_request_path_traversal(self):
+        """Kiểm tra phát hiện path traversal attacks"""
+        # Plain path traversal
+        self.assertTrue(is_suspicious_request("/../../../etc/passwd"))
+        # URL encoded path traversal
+        self.assertTrue(is_suspicious_request("/..%2F..%2F..%2Fetc%2Fpasswd"))
+        self.assertTrue(is_suspicious_request("/..%2f..%2f..%2fetc%2fpasswd"))
+        # Direct /etc/passwd access
+        self.assertTrue(is_suspicious_request("/etc/passwd"))
+        self.assertTrue(is_suspicious_request("/etc/shadow"))
+
+    def test_is_suspicious_request_php_scanning(self):
+        """Kiểm tra phát hiện PHP file scanning"""
+        # a2billing VoIP billing
+        path = "/a2billing/admin/Public/index.php"
+        self.assertTrue(is_suspicious_request(path))
+        # General PHP file access
+        self.assertTrue(is_suspicious_request("/some/path/file.php"))
+        self.assertTrue(is_suspicious_request("/admin.php?param=value"))
+        self.assertTrue(is_suspicious_request("/config.php/something"))
+        # Common vulnerable apps
+        self.assertTrue(is_suspicious_request("/roundcube/"))
+        self.assertTrue(is_suspicious_request("/webmail/"))
+        self.assertTrue(is_suspicious_request("/pma/"))
+        self.assertTrue(is_suspicious_request("/adminer.php"))
+
     def test_get_client_ip_direct(self):
         """Kiểm tra lấy IP client trực tiếp"""
         mock_request = MagicMock()

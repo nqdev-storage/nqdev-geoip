@@ -1,0 +1,54 @@
+# Suspicious URL patterns that indicate malicious requests
+# One pattern per line. Lines starting with # are comments.
+# Patterns are case-insensitive regular expressions.
+
+# WordPress and common CMS scanning
+/vtigercrm
+/wp-admin
+/wp-login
+/phpMyAdmin
+/phpmyadmin
+/admin\.php
+/shell\.php
+/\.env
+/\.git
+/config\.php
+/xmlrpc\.php
+/wp-content
+/wp-includes
+/cgi-bin
+/manager/html
+/solr
+/actuator
+/api/v1/pods
+/login\.action
+/console
+/debug
+/trace
+
+# Path traversal attacks (URL encoded and plain)
+\.\.\/
+\.\.%2[fF]
+%2[eE]%2[eE]%2[fF]
+/etc/passwd
+/etc/shadow
+
+# PHP file scanning patterns (common vulnerable PHP apps)
+/a2billing
+/roundcube
+/webmail
+/cpanel
+/plesk
+/joomla
+/drupal
+/magento
+/typo3
+/myadmin
+/pma
+/adminer
+/owa
+
+# General PHP file pattern (any .php file access)
+\.php$
+\.php\?
+\.php/
