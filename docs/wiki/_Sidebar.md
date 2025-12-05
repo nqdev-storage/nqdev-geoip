@@ -18,6 +18,6 @@
 ---
 
 ## Links nhanh
-- [📊 Swagger API](http://localhost:5000/apidocs/)
+- 📊 Swagger API: `http://<your-server>/apidocs/`
 - [🐙 GitHub Repo](https://github.com/nqdev-storage/nqdev-geoip)
 - [🐋 Docker Image](https://ghcr.io/nqdev-storage/nqdev-geoip)

@@ -54,6 +54,8 @@ print(secrets.token_hex(32))
 
 ```bash
 # Hoặc dùng command line
+# Lưu ý: Token sẽ xuất hiện trong shell history
+# Trong môi trường production, cân nhắc sử dụng file environment hoặc secret manager
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 

@@ -48,8 +48,10 @@ source venv/bin/activate
 # Cài đặt virtualenv (nếu chưa có)
 pip install virtualenv
 
-# Tạo môi trường ảo (với đường dẫn Python cụ thể)
-virtualenv venv -p C:\Python311\python.exe
+# Tạo môi trường ảo
+# Lưu ý: Thay đường dẫn Python phù hợp với máy của bạn
+python -m venv venv
+# Hoặc với đường dẫn cụ thể: virtualenv venv -p "C:\Python311\python.exe"
 
 # Kích hoạt môi trường
 .\venv\Scripts\activate

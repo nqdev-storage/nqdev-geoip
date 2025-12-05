@@ -139,8 +139,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy source code
 COPY . /app/
 
-# Expose port
-EXPOSE 8000
+# Expose port (matching application default)
+EXPOSE 5000
 
 # Environment variables
 ENV FLASK_APP=geoip_proxy.py

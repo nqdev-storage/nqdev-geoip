@@ -192,7 +192,7 @@ Database được cập nhật tự động hàng tuần qua GitHub Actions work
 ### Thủ công
 
 ```bash
-# Download GeoIP Legacy
+# Download GeoIP Legacy (sử dụng HTTPS nếu có)
 wget -O dbs/GeoIP.dat.gz https://mailfud.org/geoip-legacy/GeoIP.dat.gz
 gunzip -f dbs/GeoIP.dat.gz
 
@@ -289,8 +289,18 @@ location / {
 
 ```bash
 # Script kiểm tra số IP bị ban đột biến
-BAN_COUNT=$(cat dbs/banned_ips.json | python -c "import sys,json; print(len(json.load(sys.stdin).get('banned_ips', {})))")
-if [ $BAN_COUNT -gt 100 ]; then
+# Lưu ý: Script này cần file banned_ips.json hợp lệ
+BAN_COUNT=$(python -c "
+import json
+import sys
+try:
+    with open('dbs/banned_ips.json', 'r') as f:
+        data = json.load(f)
+        print(len(data.get('banned_ips', {})))
+except (FileNotFoundError, json.JSONDecodeError):
+    print(0)
+")
+if [ "$BAN_COUNT" -gt 100 ]; then
     echo "Warning: High number of banned IPs: $BAN_COUNT"
     # Gửi alert...
 fi
