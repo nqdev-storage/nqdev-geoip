@@ -22,7 +22,55 @@ def _load_suspicious_patterns() -> List[str]:
     if not os.path.exists(SUSPICIOUS_PATTERNS_FILE):
         logging.warning(
             f"Suspicious patterns file not found: {SUSPICIOUS_PATTERNS_FILE}")
-        return patterns
+        return [
+            r'/vtigercrm',
+            r'/wp-admin',
+            r'/wp-login',
+            r'/phpMyAdmin',
+            r'/phpmyadmin',
+            r'/admin\.php',
+            r'/shell\.php',
+            r'/\.env',
+            r'/\.git',
+            r'/config\.php',
+            r'/xmlrpc\.php',
+            r'/wp-content',
+            r'/wp-includes',
+            r'/cgi-bin',
+            r'/manager/html',
+            r'/solr',
+            r'/actuator',
+            r'/api/v1/pods',
+            r'/login\.action',
+            r'/console',
+            r'/debug',
+            r'/trace',
+            r'passwd',
+            # Path traversal attacks (URL encoded and plain)
+            r'\.\./',                      # Plain path traversal
+            r'\.\.%2[fF]',                 # URL encoded ../ (..%2F)
+            r'%2[eE]%2[eE]%2[fF]',         # URL encoded ../ (%2E%2E%2F)
+            r'/etc/passwd',                # Direct /etc/passwd access
+            r'/etc/shadow',                # Direct /etc/shadow access
+            # PHP file scanning patterns (common vulnerable PHP apps)
+            r'/a2billing',                 # a2billing VoIP billing
+            r'/roundcube',                 # Roundcube webmail
+            r'/webmail',                   # Generic webmail
+            r'/cpanel',                    # cPanel
+            r'/plesk',                     # Plesk
+            r'/joomla',                    # Joomla CMS
+            r'/drupal',                    # Drupal CMS
+            r'/magento',                   # Magento e-commerce
+            r'/typo3',                     # TYPO3 CMS
+            r'/myadmin',                   # MySQL admin
+            r'/pma',                       # phpMyAdmin alias
+            r'/adminer',                   # Adminer database tool
+            r'/owa',                       # Outlook Web Access
+            # General PHP file pattern (any .php file access)
+            r'\.php$',                     # Any .php file at end of path
+            r'\.php\?',                    # Any .php file with query string
+            r'\.php/',                     # Any .php file with trailing path
+        ]
 
     try:
         with open(SUSPICIOUS_PATTERNS_FILE, 'r', encoding='utf-8') as f:
