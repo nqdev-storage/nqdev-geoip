@@ -38,8 +38,8 @@ SUSPICIOUS_PATTERNS = [
     r'/trace',
     # Path traversal attacks (URL encoded and plain)
     r'\.\./',                      # Plain path traversal
-    r'\.\.%2[fF]',                 # URL encoded ../
-    r'%2[eE]%2[eE]/',              # URL encoded ..
+    r'\.\.%2[fF]',                 # URL encoded ../ (..%2F)
+    r'%2[eE]%2[eE]%2[fF]',         # URL encoded ../ (%2E%2E%2F)
     r'/etc/passwd',                # Direct /etc/passwd access
     r'/etc/shadow',                # Direct /etc/shadow access
     # PHP file scanning patterns (common vulnerable PHP apps)
