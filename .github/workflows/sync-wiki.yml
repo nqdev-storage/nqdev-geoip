@@ -1,0 +1,65 @@
+name: Sync Wiki Documentation
+run-name: Sync Wiki on ${{ github.event_name }} by @${{ github.actor }}
+
+on:
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches: ["main"]
+    paths:
+      - "docs/wiki/**" # Only run when docs/wiki content changes
+
+permissions:
+  contents: write
+
+jobs:
+  sync-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clone Wiki repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Clone wiki repository
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki-repo || {
+            echo "Wiki repository doesn't exist yet. Creating initial wiki..."
+            mkdir wiki-repo
+            cd wiki-repo
+            git init
+            git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
+          }
+
+      - name: Sync docs/wiki to wiki repository
+        run: |
+          # Remove old wiki content (except .git)
+          find wiki-repo -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          
+          # Copy new wiki content from docs/wiki
+          if [ -d "docs/wiki" ] && [ "$(ls -A docs/wiki)" ]; then
+            cp -r docs/wiki/. wiki-repo/
+            echo "✅ Wiki content synced successfully"
+            ls -la wiki-repo/
+          else
+            echo "⚠️ docs/wiki is empty or doesn't exist"
+            exit 1
+          fi
+
+      - name: Push changes to Wiki
+        run: |
+          cd wiki-repo
+          git add -A
+          
+          if git diff --cached --quiet; then
+            echo "📝 No changes to push to wiki"
+          else
+            git commit -m "docs: sync wiki from docs/wiki [skip ci]"
+            git push origin HEAD
+            echo "✅ Wiki updated successfully"
+          fi
