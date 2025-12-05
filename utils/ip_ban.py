@@ -36,6 +36,30 @@ SUSPICIOUS_PATTERNS = [
     r'/console',
     r'/debug',
     r'/trace',
+    # Path traversal attacks (URL encoded and plain)
+    r'\.\./',                      # Plain path traversal
+    r'\.\.%2[fF]',                 # URL encoded ../
+    r'%2[eE]%2[eE]/',              # URL encoded ..
+    r'/etc/passwd',                # Direct /etc/passwd access
+    r'/etc/shadow',                # Direct /etc/shadow access
+    # PHP file scanning patterns (common vulnerable PHP apps)
+    r'/a2billing',                 # a2billing VoIP billing
+    r'/roundcube',                 # Roundcube webmail
+    r'/webmail',                   # Generic webmail
+    r'/cpanel',                    # cPanel
+    r'/plesk',                     # Plesk
+    r'/joomla',                    # Joomla CMS
+    r'/drupal',                    # Drupal CMS
+    r'/magento',                   # Magento e-commerce
+    r'/typo3',                     # TYPO3 CMS
+    r'/myadmin',                   # MySQL admin
+    r'/pma',                       # phpMyAdmin alias
+    r'/adminer',                   # Adminer database tool
+    r'/owa',                       # Outlook Web Access
+    # General PHP file pattern (any .php file access)
+    r'\.php$',                     # Any .php file at end of path
+    r'\.php\?',                    # Any .php file with query string
+    r'\.php/',                     # Any .php file with trailing path
 ]
 
 # Compile patterns for efficient matching
