@@ -7,63 +7,40 @@ import os
 import re
 import datetime
 import logging
-from typing import Dict
+from typing import Dict, List
 
-# Ban list file path
-BAN_LIST_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dbs', 'banned_ips.json')
+# File paths
+BAN_LIST_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), 'dbs', 'banned_ips.json')
+SUSPICIOUS_PATTERNS_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), 'dbs', 'suspicious.txt')
 
-# Suspicious URL patterns that indicate malicious requests
-SUSPICIOUS_PATTERNS = [
-    r'/vtigercrm',
-    r'/wp-admin',
-    r'/wp-login',
-    r'/phpMyAdmin',
-    r'/phpmyadmin',
-    r'/admin\.php',
-    r'/shell\.php',
-    r'/\.env',
-    r'/\.git',
-    r'/config\.php',
-    r'/xmlrpc\.php',
-    r'/wp-content',
-    r'/wp-includes',
-    r'/cgi-bin',
-    r'/manager/html',
-    r'/solr',
-    r'/actuator',
-    r'/api/v1/pods',
-    r'/login\.action',
-    r'/console',
-    r'/debug',
-    r'/trace',
-    # Path traversal attacks (URL encoded and plain)
-    r'\.\./',                      # Plain path traversal
-    r'\.\.%2[fF]',                 # URL encoded ../ (..%2F)
-    r'%2[eE]%2[eE]%2[fF]',         # URL encoded ../ (%2E%2E%2F)
-    r'/etc/passwd',                # Direct /etc/passwd access
-    r'/etc/shadow',                # Direct /etc/shadow access
-    # PHP file scanning patterns (common vulnerable PHP apps)
-    r'/a2billing',                 # a2billing VoIP billing
-    r'/roundcube',                 # Roundcube webmail
-    r'/webmail',                   # Generic webmail
-    r'/cpanel',                    # cPanel
-    r'/plesk',                     # Plesk
-    r'/joomla',                    # Joomla CMS
-    r'/drupal',                    # Drupal CMS
-    r'/magento',                   # Magento e-commerce
-    r'/typo3',                     # TYPO3 CMS
-    r'/myadmin',                   # MySQL admin
-    r'/pma',                       # phpMyAdmin alias
-    r'/adminer',                   # Adminer database tool
-    r'/owa',                       # Outlook Web Access
-    # General PHP file pattern (any .php file access)
-    r'\.php$',                     # Any .php file at end of path
-    r'\.php\?',                    # Any .php file with query string
-    r'\.php/',                     # Any .php file with trailing path
-]
 
-# Compile patterns for efficient matching
-COMPILED_PATTERNS = [re.compile(pattern, re.IGNORECASE) for pattern in SUSPICIOUS_PATTERNS]
+def _load_suspicious_patterns() -> List[str]:
+    """Load suspicious URL patterns from file."""
+    patterns = []
+    if not os.path.exists(SUSPICIOUS_PATTERNS_FILE):
+        logging.warning(
+            f"Suspicious patterns file not found: {SUSPICIOUS_PATTERNS_FILE}")
+        return patterns
+
+    try:
+        with open(SUSPICIOUS_PATTERNS_FILE, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                # Skip empty lines and comments
+                if line and not line.startswith('#'):
+                    patterns.append(line)
+    except IOError as e:
+        logging.error(f"Error loading suspicious patterns: {e}")
+
+    return patterns
+
+
+# Load and compile patterns
+SUSPICIOUS_PATTERNS = _load_suspicious_patterns()
+COMPILED_PATTERNS = [
+    re.compile(pattern, re.IGNORECASE) for pattern in SUSPICIOUS_PATTERNS]
 
 
 def _load_ban_list() -> Dict:
