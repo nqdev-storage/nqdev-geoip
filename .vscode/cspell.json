@@ -11,7 +11,8 @@
   3. cspell.config.js -> cspell.config.cjs
   4. cspell.config.json
   5. cspell.config.yaml -> cspell.config.yml -> cspell.yaml -> cspell.yml
-*/{
+*/
+{
     "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
     // Version of the setting file.  Always 0.2
     "version": "0.2",
@@ -38,6 +39,7 @@
         "pyflakes",
         "pygeoip",
         "pytest",
+        "unban",
         "virtualenv",
         "Werkzeug"
     ],
