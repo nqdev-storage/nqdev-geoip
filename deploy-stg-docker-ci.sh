@@ -28,6 +28,9 @@ git pull --recurse-submodules
 # copy env production
 # cp ./.env.production ./.env
 
+# clear log files
+truncate -s 0 ./logs/*.log
+
 # build and run docker
 docker-compose up -d --build
 

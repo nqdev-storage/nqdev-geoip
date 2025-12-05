@@ -12,6 +12,7 @@ services:
       - 8002:5000
     volumes:
       - ./dbs:/app/dbs
+      - ./logs:/app/logs
       # - ./static:/app/static
       # - ./api/utils/credentials:/app/api/utils/credentials
     environment:

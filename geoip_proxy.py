@@ -57,6 +57,9 @@ Swagger(app=app)
 # Xử lý reverse proxy (nếu có) - ví dụ khi ứng dụng chạy sau Nginx hoặc HAProxy
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
+# Thêm handler vào app.logger của Flask
+app.logger = logging.getLogger()
+
 # Register blueprints
 app.register_blueprint(ip2location_bp)
 app.register_blueprint(user_bp)
