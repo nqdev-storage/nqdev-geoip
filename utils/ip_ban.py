@@ -184,6 +184,11 @@ def is_suspicious_request(path: str) -> bool:
     return False
 
 
+def contains_invalid_chars(data: str) -> bool:
+    """Kiểm tra nếu có ký tự lạ không phải ASCII trong data."""
+    return bool(re.search(r'[^\x00-\x7F]+', data))
+
+
 def get_client_ip(request) -> str:
     """
     Get the real client IP from a Flask request, handling proxies.
@@ -213,3 +218,8 @@ def get_client_ip(request) -> str:
 
     # Return 'unknown' if no IP can be determined
     return 'unknown'
+
+
+def is_valid_http_method(request) -> bool:
+    """Kiểm tra nếu phương thức HTTP hợp lệ."""
+    return request.method in VALID_HTTP_METHODS

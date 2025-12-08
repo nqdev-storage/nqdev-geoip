@@ -16,8 +16,9 @@ from config import Config
 from geoip_update import download_and_extract, url_geoip, url_geoip_city
 from utils.response_helper import okResult
 from utils.ip_ban import (
-    is_ip_banned, ban_ip, unban_ip,
-    is_suspicious_request, get_client_ip
+    is_ip_banned, ban_ip,
+    is_suspicious_request, get_client_ip,
+    is_valid_http_method, contains_invalid_chars,
 )
 from utils.private_cidr import (
     is_private_cidr, get_private_cidr_response, get_private_cidr_country_code
@@ -94,12 +95,34 @@ def check_banned_ip():
             f"Blocked request from banned IP: {client_ip} - {request.path}")
         return jsonify({"error": "Access denied"}), 403
 
+    # Kiểm tra phương thức HTTP
+    if not is_valid_http_method(request):
+        logging.warning(
+            f"Blocked invalid HTTP method from IP: {client_ip} - {request.method} - {request.path}")
+        return jsonify({"error": "Invalid HTTP method"}), 405
+
     # Phát hiện request đáng ngờ và tự động ban IP
     if is_suspicious_request(request.path):
         logging.warning(
             f"Suspicious request detected from IP: {client_ip} - {request.path}")
         ban_ip(client_ip, reason=f"Suspicious request: {request.path}")
         return jsonify({"error": "Access denied"}), 403
+
+    # Kiểm tra nếu có ký tự lạ trong message body (nếu có)
+    if request.method in ['POST', 'PUT', 'PATCH'] and request.is_json:
+        try:
+            data = request.get_json()
+            for key, value in data.items():
+                if contains_invalid_chars(str(value)):
+                    logging.warning(
+                        f"Blocked request from IP: {client_ip} - Invalid characters in data: {key}")
+                    ban_ip(
+                        client_ip, reason=f"Invalid characters in data: {key}")
+                    return jsonify({"error": "Access denied"}), 403
+        except Exception as e:
+            logging.warning(
+                f"Blocked request from IP: {client_ip} - Invalid JSON format")
+            return jsonify({"error": "Invalid JSON format"}), 400
 
 
 @app.route(rule='/', methods=['GET'])
