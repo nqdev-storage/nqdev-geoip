@@ -8,6 +8,20 @@
 
 Nền tảng cung cấp miễn phí cơ sở dữ liệu GeoIP legacy và GeoLite2, cập nhật định kỳ, phục vụ nhu cầu tra cứu vị trí địa lý theo địa chỉ IP.
 
+## 📚 Tài liệu Wiki
+
+Xem hướng dẫn chi tiết tại **[Wiki](https://github.com/nqdev-storage/nqdev-geoip/wiki)** hoặc trong thư mục [`docs/wiki/`](docs/wiki/):
+
+| Trang | Mô tả |
+|-------|-------|
+| [Home](docs/wiki/Home.md) | Trang chủ Wiki - Tổng quan dự án |
+| [Installation](docs/wiki/Installation.md) | Hướng dẫn cài đặt |
+| [API Reference](docs/wiki/API-Reference.md) | Tài liệu API đầy đủ |
+| [Docker Deployment](docs/wiki/Docker-Deployment.md) | Triển khai bằng Docker |
+| [Configuration](docs/wiki/Configuration.md) | Các tùy chọn cấu hình |
+| [Admin Guide](docs/wiki/Admin-Guide.md) | Hướng dẫn quản trị |
+| [Troubleshooting](docs/wiki/Troubleshooting.md) | Xử lý sự cố |
+
 ## 🔍 Giới thiệu
 
 `nqdev-geoip` là dự án Python hỗ trợ:
