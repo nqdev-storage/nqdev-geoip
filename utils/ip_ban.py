@@ -15,6 +15,10 @@ BAN_LIST_FILE = os.path.join(
 SUSPICIOUS_PATTERNS_FILE = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), 'dbs', 'suspicious.txt')
 
+# Các phương thức HTTP hợp lệ
+VALID_HTTP_METHODS = ['GET', 'POST', 'PUT',
+                      'DELETE', 'PATCH', 'OPTIONS', 'HEAD']
+
 
 def _load_suspicious_patterns() -> List[str]:
     """Load suspicious URL patterns from file."""
