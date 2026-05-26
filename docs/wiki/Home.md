@@ -16,14 +16,31 @@ Chào mừng bạn đến với Wiki hướng dẫn sử dụng **nqdev-geoip** 
 
 ## 📚 Mục lục
 
+### Bắt đầu
 | Trang | Mô tả |
 |-------|-------|
-| [Cài đặt](Installation) | Hướng dẫn cài đặt và thiết lập môi trường |
-| [API Reference](API-Reference) | Tài liệu tham khảo đầy đủ về các API endpoints |
+| [Installation](Installation) | Hướng dẫn cài đặt và thiết lập môi trường |
 | [Docker Deployment](Docker-Deployment) | Triển khai bằng Docker và Docker Compose |
-| [Cấu hình](Configuration) | Các tùy chọn cấu hình hệ thống |
-| [Quản trị](Admin-Guide) | Hướng dẫn quản trị và quản lý IP ban |
-| [Xử lý sự cố](Troubleshooting) | Giải quyết các vấn đề thường gặp |
+
+### Tài liệu kỹ thuật
+| Trang | Mô tả |
+|-------|-------|
+| [API Reference](API-Reference) | Tài liệu tham khảo đầy đủ về các API endpoints |
+| [Architecture](Architecture) | Kiến trúc hệ thống và thiết kế |
+| [Security](Security) | Tính năng bảo mật và best practices |
+
+### Vận hành
+| Trang | Mô tả |
+|-------|-------|
+| [Configuration](Configuration) | Các tùy chọn cấu hình hệ thống |
+| [Admin Guide](Admin-Guide) | Hướng dẫn quản trị và quản lý IP ban |
+| [Troubleshooting](Troubleshooting) | Giải quyết các vấn đề thường gặp |
+
+### Phát triển
+| Trang | Mô tả |
+|-------|-------|
+| [Development](Development) | Hướng dẫn phát triển và đóng góp |
+| [CI/CD](CI-CD) | Pipeline tự động và deployment |
 
 ## 🚀 Bắt đầu nhanh
 
