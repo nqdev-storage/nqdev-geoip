@@ -82,12 +82,6 @@ curl --location 'http://localhost:5000/geoip?ip=185.213.82.249'
 curl --location 'http://localhost:5000/geoipcity?ip=185.213.82.249'
 ```
 
-### 📸 Instagram GetInfo (mẫu tham khảo)
-
-```bash
-curl --location 'http://localhost:5000/instagram/getinfo?username=bngoc.winwin'
-```
-
 ## 📚 Sử dụng thư viện Python
 
 ```python
